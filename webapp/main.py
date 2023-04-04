@@ -5,7 +5,7 @@ from flask_mail import Mail, Message
 from flask_session import Session
 import spotipy
 
-import control as ctrl
+import control.control as ctrl
 from utils import utils
 
 client_id, client_secret, scope = ctrl.get_spotify_app_configurations()
