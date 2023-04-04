@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+    <link href="static/css/ffm_slider_styles.css" rel="stylesheet">
+
+    <script type="text/javascript" src="static/vendor/jquery/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<!--<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="user_profile">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="create_group">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="my_groups">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>-->
+
+{% if session['missing_parameters_msg'] %}
+<div class="alert alert-danger" role="alert">
+    {{ session['missing_parameters_msg'] }}
+</div>
+{% endif %}
+
+<!-- Default form subscription -->
+<form id="session_one_form" class="text-center p-2"
+      action="{{session['session_route']}}" method="post">
+
+    <p class="h4 mb-4">{{session['FFM']['title']}}</p>
+
+    <div class="instrument_tab" style="display: none;">
+        {{ session['FFM']['instruction']|safe }}
+    </div>
+
+    {% for trait in session['FFM']['questionnaire'] %}
+        <div class="instrument_tab" style="display: none;">
+            <div class="text-center p-2">
+                {{ session['FFM']['instruction_short']|safe}}
+                <br>
+                {{ trait['INPUT_ID'] }}
+                {{ trait['SWAP'] }}
+            </div>
+            <br>
+            <table class="ffm_stories_table table table-borderless">
+                <tbody>
+                    <tr>
+                        <th class="ffm_story_left text-white my-auto">
+
+                            {% if trait['SWAP'] %}
+                                {{trait['HIGH_STORY']}}
+                            {% else %}
+                                {{trait['LOW_STORY']}}
+                            {% endif %}
+                        </th>
+                        <th class="ffm_slider my-auto">
+                            <input type="range" id="{{trait['INPUT_ID']}}" name="{{trait['INPUT_ID']}}"
+                                   class="ffm_range" min="18" max="162">
+
+                            <input type="hidden" id="{{trait['INPUT_ID']}}_swap" name="{{trait['INPUT_ID']}}_swap"
+                                   value="{{trait['SWAP']}}">
+                        </th>
+                        <th class="ffm_story_right text-white my-auto">
+                            {% if trait['SWAP'] %}
+                                {{trait['LOW_STORY']}}
+                            {% else %}
+                                {{trait['HIGH_STORY']}}
+                            {% endif %}
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+    <input type="hidden" id="hidden_s1_submit" name="s1_submit" value="s1_submit">
+</form>
+
+<div class="text-center ">
+    <button id="s1_submit" name="s1_submit" value="s1_submit" onclick="nextTab(1)"
+        class="btn btn-info btn-block" ></button>
+</div>
+
+<script>
+    var currentTab = 0; // Current tab is set to be the first tab (0)
+    showTab(currentTab); // Display the current tab
+
+    function showTab(n) {
+      var tabList = document.getElementsByClassName("instrument_tab");
+      tabList[n].style.display = "block"; // show the selected tab
+
+      if (n == 0) {
+        document.getElementById("s1_submit").innerHTML = "Start";
+      } else if (n == (tabList.length - 1)) {
+        document.getElementById("s1_submit").disabled = true;
+        document.getElementById("s1_submit").innerHTML = "Submit";
+      } else {
+        document.getElementById("s1_submit").disabled = true;
+        document.getElementById("s1_submit").innerHTML = "Next";
+      }
+    }
+
+    function nextTab(n) {
+      var tabList = document.getElementsByClassName("instrument_tab");
+      tabList[currentTab].style.display = "none";
+      currentTab = currentTab + n;
+      if (currentTab >= tabList.length) {
+        document.getElementById("session_one_form").submit();
+      } else {
+        showTab(currentTab);
+      }
+    }
+
+    const $element = $('input[type="range"]');
+    var currentState;
+
+    $element.on("input", function () {
+        document.getElementById("s1_submit").disabled = false;
+    });
+
+</script>
+<!-- Default form subscription -->
+
+
+<!-- Footer -->
+<!--<footer class="py-5 bg-black">-->
+<!--    <div class="container">-->
+<!--        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; /.container &ndash;&gt;-->
+<!--</footer>-->
+
+<!-- Bootstrap core JavaScript -->
+
+
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

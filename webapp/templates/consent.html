@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Music Recommendations</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}?rnd=3">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+
+
+  <header class="masthead text-left text-white">
+    <div class="masthead-content">
+      <div class="container">
+        <h1 class="masthead-heading mb-0">Music Group Recommendations</h1>
+          <h5>
+              The purpose of this study is to analyze the satisfaction related on listening to different songs in different contexts, alone or in a group. Nava Tintarev (Full Professor at Maastricht University, DKE) and Francesco Barile (Post-doc Researcher at Maastricht University, DKE) are conducting this evaluation.
+          </h5>
+          <h5>
+              Your participation in this research study is voluntary. You may choose not to participate. If you decide to participate in this research survey, you may withdraw at any time. If you do not complete the survey, we will treat it as a withdrawal and your answers thus far will not be used.
+          </h5>
+          <h5>
+              The procedure involves filling three online surveys in three different sessions. The first session will take approx. 20 minutes. The sessions 2 will take approx. 25 min, and the session 3 will take approx. 5 minutes, and you will receive an email notifying the start of each session.
+              You will be asked to register on our web application using your Spotify account.
+              {% if session['invited'] %}
+                You will perform the experiment together with the person who invited you (each one will carry out the experiment individually).  Such person should be somebody with whom you have a close relationship (e.g., your partner or a close friend).
+              {% else %}
+                You will be asked to indicate the email address and the nickname of a second person who can perform the experiment with you (each one will carry out the experiment individually).  Such person should be somebody with whom you have a close relationship (e.g., your partner or a close friend).
+              {% endif %}
+          </h5>
+          <h5>
+              It is necessary for our purposes that both of you are regular users of the Spotify app. Also, both of you need to be available in performing the required sessions during the next weeks.
+              You will be asked to provide personality evaluations for both you and your friend. Such evaluations will be confidential and stored anonymously.
+              You will be asked also to provide several evaluations related to songs listening in different contexts. Please note that part of such songs evaluations will be shared with your friend and with a second randomly selected participant. In this case, the participant will have no personal information to associate such evaluations to you.
+          </h5>
+          <h5>
+              All data is stored in a password protected electronic format. We will not store any information that will personally identify you, including IP addresses.
+              {% if session['invited'] %}
+                We will only use your email address for notification purposes.
+              {% else %}
+                Your email address is the only information we store in a not anonymized way, and shared only with your friend to let him know who is inviting him in the study, since this is a requirement for our study. Then, we will only use your email address for notification purposes.
+              {% endif %}
+              After the end of the third session, you will have 30 days to contact us for deleting your data; then, we will delete all the email addresses and nicknames, and all the provided data will be stored anonymously.
+              The results of this study will be used for the creation of scholarly publication. Furthermore, a public dataset will be generated and made available to the scientific community; in this case, only anonymized data will be included in such dataset.
+          </h5>
+          <h5>
+              Among the participants, we will extract one winner for an Amazon voucher worth 20 euros.
+              If you have any question about the research study, please contact Francesco Barile at the following mail address:
+          </h5>
+          <h5>
+              f.barile@maastrichtuniversity.nl
+          </h5>
+          <h5>
+              This research has been reviewed by Ethics Review Committee Inner City faculties (ERCIC).
+          </h5>
+          <h5>
+              ELECTRONIC CONSENT: Please select your choice below.
+          </h5>
+          <h5>
+              Clicking on the “agree” button below indicates that:
+          </h5>
+          <h5>
+              <ul style="list-style-position: inside;">
+                  <li>You have read the above information</li>
+                  <li>You voluntarily agree to participate</li>
+                  <li>You are at least 18 years of age</li>
+              </ul>
+          </h5>
+          <h5>
+              If you do not wish to participate in the research study, please decline participation by clicking on the “disagree” button.
+          </h5>
+          <form action="go" method="get">
+              <center>
+                  <button type="submit" class="btn btn-success spotify_button" id="agree" style="">
+                      <h4><i class="fab fa-spotify"></i>Agree and Register</h4>
+                  </button>
+              </center>
+          </form>
+          <form action="quit" method="get">
+              <center>
+                  <button type="submit" class="btn btn-danger spotify_button" id="disagree" style="">
+                      <h4><i class="fab fa-spotify"></i>Disagree and Quit</h4>
+                  </button>
+              </center>
+          </form>
+
+      </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+  </header>
+
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

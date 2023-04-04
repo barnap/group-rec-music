@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}?rnd=3">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js"
+            integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+            crossorigin="anonymous"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="https://surveyjs.azureedge.net/1.1.15/survey.jquery.js"></script>
+    <link href="https://surveyjs.azureedge.net/1.1.15/survey.css" type="text/css" rel="stylesheet"/>
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="create_group">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="my_groups">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<br><br><br>
+
+<section>
+
+        <div id="surveyElement">
+        </div>
+
+</section>
+
+<script type="text/javascript">
+
+Survey.StylesManager.applyTheme("default");
+
+
+
+var json = { pages: [
+            {
+            "questions": [
+                {
+                    "type": "panel",
+                    "elements": [
+                        {
+                            "type": "html",
+                            "name": "income_intro",
+                            "html": "{{intro_html|safe}}"
+                        }
+                    ],
+                    "name": "panel1"
+                }
+            ]},
+        {questions: [
+             {
+                    "type": "panel",
+                    "elements": [
+                        {
+                            "type": "html",
+                            "name": "recommended_song",
+                            "html": "{{rec_html|safe}}"
+                        }
+                    ],
+                    "name": "panel2"
+                },
+            { type: "matrix", name: "Quality", title: "Please indicate if you agree or disagree with the following statements",
+                columns: [{ value: 1, text: "Strongly Disagree" },
+                          { value: 2, text: "Disagree" },
+                          { value: 3, text: "Neutral" },
+                          { value: 4, text: "Agree" },
+                          { value: 5, text: "Strongly Agree" }],
+                rows: [{ value: "transparency", text: "We understand why the system recommended the song it did." },
+                       { value: "transparency-1", text: "We understand what the system bases its recommendations on." },
+                       { value: "satisfaction", text: "The explanation helps to increase the satisfaction of group members" },
+                       { value: "feedback", text: "We like the recommended song." }]},
+            { type: "rating", name: "satisfaction", title: "How satisfied are you with the recommended song?", isRequired:  true,
+                mininumRateDescription: "Not Satisfied", maximumRateDescription: "Completely satisfied" },
+            { type: "comment", name: "suggestions", title:"What would make you more satisfied with the Product?", }
+        ]}
+    ]
+};
+
+window.survey = new Survey.Model(json);
+
+
+    survey.onComplete.add(function(result) {
+         $.ajax({
+           url : '/submitSurvey',
+           type : 'POST',
+            headers: {"Content-Type": "application/json"},
+           dataType: 'json',
+           data : JSON.stringify(result.data),
+           success : function(data){
+           }
+           });
+    });
+
+
+$("#surveyElement").Survey({
+    model: survey
+});
+
+
+
+</script>
+
+<br>
+
+<!-- Footer -->
+<footer class="py-5 bg-black">
+    <div class="container">
+        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+
+
+</body>
+
+</html>

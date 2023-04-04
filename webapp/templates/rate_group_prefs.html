@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="static/vendor/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/vendor/bootstrap/js/rater.js" charset="utf-8"></script>
+
+    <!-- Latest compiled and minified CSS BELOW TWO ARE FOR RATEYO-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+
+    <!-- Flickty -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+    <script>
+        var rated_items = new Set([]);
+        var items_size = {{tracks|length}};
+    </script>
+
+    <script>
+        $(function () {
+
+   var rating;
+  $(".rateYo").rateYo({
+    starWidth: "40px",
+    fullStar: true,
+  }).on("rateyo.set", function (e, data) {
+                 var id = this.id;
+                 rated_items.add(id);
+                 rating = data.rating;
+                 rateSongs(id, rating);
+              });
+
+});
+
+    </script>
+
+    <script>
+     function rateSongs(id, rating) {
+          $.ajax({
+           url : '/rateSongs',
+           type : 'POST',
+            headers: {"Content-Type": "application/json"},
+           dataType: 'json',
+           data : JSON.stringify({"id": id, "rating": rating }),
+           success : function(data){
+                var remaining_songs = items_size - rated_items.size;
+
+                if(remaining_songs == 0){
+                    document.getElementById('number_of_rated_songs').innerHTML = "You can finalize your ratings now!"
+                }else{
+                document.getElementById('number_of_rated_songs').innerHTML = "You should rate ".concat( String(items_size - rated_items.size)).concat( " more songs to finalize ratings!");
+                }
+                var submitRatingsButton = document.getElementById("submitRatingsButton");
+                if(rated_items.size < items_size){
+                    $(submitRatingsButton).prop('disabled', true);
+                } else{
+                    $(submitRatingsButton).prop('disabled', false);
+                }
+           }
+           });
+    }
+    </script>
+
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="user_profile">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="create_group">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="my_groups">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br><br><br>
+
+
+<section>
+    <div class="container">
+
+        <div class="carousel" data-flickity='{ "accessibility": true }'>
+
+            {% for index in range(0, tracks|length) %}
+            <div class="carousel-cell">
+                <iframe src="{{track_uris[index]}}" width="300" height="380" frameborder="0"
+                        allowtransparency="true"
+                        allow="encrypted-media"></iframe>
+
+
+                <br>
+                <center>
+                    <div class="rateYo" id="{{tracks[index]}}"></div>
+
+                </center>
+                <br>
+                <br>
+                <br>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    </div>
+
+</section>
+<br><br>
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <form name="submitRatings" id="submitRatings" novalidate="novalidate" action="submitRatings"
+                      method="post">
+                    <div class="form-group">
+                        <label id="number_of_rated_songs"></label>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-danger spotify_button" id="submitRatingsButton" disabled><h4>
+                                Finalize
+                                Ratings </h4></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<br><br>
+
+<br>
+
+<!-- Footer -->
+<footer class="py-5 bg-black">
+    <div class="container">
+        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+
+
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

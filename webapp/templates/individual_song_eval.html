@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+    <link href="static/css/songs_slider_styles.css" rel="stylesheet">
+
+<!--    <script type="text/javascript" src="static/vendor/jquery/jquery.min.js"></script>-->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="https://andreruffert.github.io/rangeslider.js/assets/rangeslider.js/dist/rangeslider.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<!--<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="user_profile">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="create_group">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="my_groups">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>-->
+
+{% if session['missing_parameters_msg'] %}
+<div class="alert alert-danger" role="alert">
+    {{ session['missing_parameters_msg'] }}
+</div>
+{% endif %}
+
+<!-- Default form subscription -->
+<form id="session_one_form" class="text-center p-2"
+      action="{{session['session_route']}}" method="post">
+
+    <p class="h4 mb-4">{{session['INDIVIDUAL_SONGS']['title']}}</p>
+
+    <div class="instrument_tab" style="display: none;">
+        {{ session['INDIVIDUAL_SONGS']['instruction']|safe }}
+    </div>
+
+    {% for song in session['INDIVIDUAL_SONGS']['individual_song_list'] %}
+        <div class="instrument_tab" style="display: none;">
+            <div class="text-center p-2">
+                {{session['INDIVIDUAL_SONGS']['instruction_short']|safe}}
+            </div>
+            <table class="table table-borderless p-2">
+                <tbody>
+                    <tr>
+
+                        <th class="song_player my-auto">
+                            {% if song['attention'] %}
+                                <img src="static/img/attention.png" alt="ATTENTION CHECK!!!!" width="300" height="300">
+                                <br>
+                                THIS IS AN ATTENTION CHECK!! PLEASE SELECT A VALUE GREATER THAN 75!!
+
+                            {% else %}
+                                <iframe class="player" src="{{song['SONG_URL']}}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+                            {% endif %}
+                        </th>
+                        <th class="song_slider my-auto">
+                            <table class="table table-borderless p-0 slider_table">
+                                <tr>
+                                    <th>Definitely Not</th>
+                                    <th>Probably Not</th>
+                                    <th>Neutral</th>
+                                    <th>Probably Yes</th>
+                                    <th>Definitely Yes</th>
+                                </tr>
+                                <tr>
+                                    <th><img src="static/img/S1.png" alt="Definitely Not" width="40" height="40"></th>
+                                    <th><img src="static/img/S2.png" alt="Probably Not" width="40" height="40"></th>
+                                    <th><img src="static/img/S3.png" alt="Neutral" width="40" height="40"></th>
+                                    <th><img src="static/img/S4.png" alt="Probably Yes" width="40" height="40"></th>
+                                    <th><img src="static/img/S5.png" alt="Definitely Yes" width="40" height="40"></th>
+                                </tr>
+                                <tr>
+                                    <th colspan="5">
+                                        <div class="main">
+                                            <input class="mainslider" type="range" id="SONG_{{song['SONG_INDEX']}}"
+                                                   name="SONG_{{song['SONG_INDEX']}}" min="0" max="100" value="50">
+                                        </div>
+                                        <input type="hidden" id="SONG_{{song['SONG_INDEX']}}_SONG_ID" name="SONG_{{song['SONG_INDEX']}}_SONG_ID"
+                                               value="{{song['SONG_ID']}}">
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+    <input type="hidden" id="hidden_s1_submit" name="s1_submit" value="s1_submit">
+</form>
+
+<div class="text-center ">
+    <button id="s1_submit" name="s1_submit" value="s1_submit" onclick="nextTab(1)"
+        class="btn btn-info btn-block" ></button>
+</div>
+
+<script>
+    var currentTab = 0; // Current tab is set to be the first tab (0)
+    showTab(currentTab); // Display the current tab
+
+    function showTab(n) {
+      var tabList = document.getElementsByClassName("instrument_tab");
+      tabList[n].style.display = "block"; // show the selected tab
+
+      if (n == 0) {
+        document.getElementById("s1_submit").innerHTML = "Start";
+      } else if (n == (tabList.length - 1)) {
+        document.getElementById("s1_submit").disabled = true;
+        document.getElementById("s1_submit").innerHTML = "Submit";
+      } else {
+        document.getElementById("s1_submit").disabled = true;
+        document.getElementById("s1_submit").innerHTML = "Next";
+      }
+    }
+
+    function nextTab(n) {
+      var tabList = document.getElementsByClassName("instrument_tab");
+      if (currentTab > 0){
+          var player = tabList[currentTab].querySelector("iframe").remove();
+      }
+      tabList[currentTab].style.display = "none";
+      currentTab = currentTab + n;
+      if (currentTab >= tabList.length) {
+        document.getElementById("session_one_form").submit();
+      } else {
+        showTab(currentTab);
+      }
+    }
+
+		const $element = $('input[type="range"]');
+		var currentState;
+
+		$element
+		    .rangeslider({
+		        polyfill: false,
+                onInit: function () {
+                    updateHandle(this.$handle[0], this.value);
+                }
+		    })
+		    .on("input", function () {
+		        console.log($(this.parentNode).find('.rangeslider__handle'));
+    		    updateHandle($(this.parentNode).find('.rangeslider__handle')[0], this.value);
+    		    document.getElementById("s1_submit").disabled = false;
+		    });
+
+		// Update the value inside the slider handle
+		function updateHandle(el, val) {
+		  el.textContent = val;
+		}
+
+
+
+</script>
+<!-- Default form subscription -->
+
+
+<!-- Footer -->
+<!--<footer class="py-5 bg-black">-->
+<!--    <div class="container">-->
+<!--        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; /.container &ndash;&gt;-->
+<!--</footer>-->
+
+<!-- Bootstrap core JavaScript -->
+
+
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

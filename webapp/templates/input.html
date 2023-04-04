@@ -1,0 +1,40 @@
+<head><script type="text/javascript">
+	function showDiv() {
+	   document.getElementById('load').style.display = "block";
+	}
+</script></head>
+{% extends "layout.html" %}
+
+{% block body %}
+ 
+<script src="script.js"></script>
+<div class="block1">
+<h1>Discover Music as a group!</h1>
+<!--   <p>In the first box, please type your username. This can be found by going into your Spotify App, going to the top-right corner, clicking the drop-down menu, and selecting 'account'</p> -->
+  <p>  Get your top tracks from Spotify!</p>
+</div>
+
+<!-- <div class="block2">
+  <p>Please put in your username. This can be found by going into your Spotify App, going to the top-right corner, clicking the drop-down menu, and selecting 'account'</p>
+</div> -->
+
+<!-- <form method="POST">
+    <input name="username">
+    <input type="submit"/>
+</form> -->
+
+<form action="go" method="get">
+<!-- 	<input name="username"> -->
+    <!-- <input name="text"> -->
+    <!--<input type="submit" onclick="showDiv()"/>-->
+    <center>
+        <!--<button type="submit" id="" style=""><h4> Get my top tracks!</h4></button>-->
+        <button type="submit" class="btn btn-danger spotify_button" id="" style=""><h4><i class="fab fa-spotify"></i> Login with your Spotify Account</h4></button>
+    </center>
+</form>
+
+<div id="load" style="display:none;" class="loader"></div>
+
+{% endblock %}
+
+

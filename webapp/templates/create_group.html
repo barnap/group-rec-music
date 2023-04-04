@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+    <link href="static/vendor/bootstrap/css/jquery.magicsearch.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="static/vendor/bootstrap/js/jquery.magicsearch.min.js"></script>
+
+    <!-- For the plug-in dependencies -->
+    <script type="text/javascript" src='http://code.jquery.com/jquery-latest.min.js'></script>
+
+
+    <!-- For Bootstrap UI Button -->
+    <!--<link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />-->
+    <!--<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>-->
+    <script type="text/javascript" src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script type="text/javascript" src="static/vendor/bootstrap/js/multiple-emails.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/multiple-emails.css"/>
+
+    <script type="text/javascript">
+
+		//Plug-in function for the bootstrap version of the multiple email
+		$(function() {
+			//To render the input device to multiple email input using BootStrap icon
+			$('#example_emailBS').multiple_emails({position: "bottom"});
+			//OR $('#example_emailBS').multiple_emails("Bootstrap");
+
+			//Shows the value of the input device, which is in JSON format
+			$('#current_emailsBS').text($('#example_emailBS').val());
+			$('#example_emailBS').change( function(){
+				$('#current_emailsBS').text($(this).val());
+			});
+		});
+
+		//Plug-in function for the Semantic UI version of the multiple email
+		$(function() {
+			//To render the input device to multiple email input using SemanticUI icon
+			$('#example_emailSUI').multiple_emails({theme: "SemanticUI"});
+
+			//Shows the value of the input device, which is in JSON format
+			$('#current_emailsSUI').text($('#example_emailSUI').val());
+			$('#example_emailSUI').change( function(){
+				$('#current_emailsSUI').text($(this).val());
+			});
+		});
+
+		//Plug-in function for the bootstrap version of the multiple email
+		$(function() {
+			//To render the input device to multiple email input using a simple hyperlink text
+			$('#example_emailB').multiple_emails({theme: "Basic"});
+
+			//Shows the value of the input device, which is in JSON format
+			$('#current_emailsB').text($('#example_emailB').val());
+			$('#example_emailB').change( function(){
+				$('#current_emailsB').text($(this).val());
+			});
+		});
+
+    </script>
+
+</head>
+
+<body>
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="user_profile">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="my_groups">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br><br><br>
+<br>
+
+<section class="page-section" id="contact">
+    <div class="container">
+
+        <!-- Contact Section Heading -->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Create Group!</h2>
+
+
+        <!-- Contact Section Form -->
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                <form name="sentMessage" id="contactForm" action="create_group" method="post">
+                    <div class="control-group">
+                        <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                            <label>Group Name!</label>
+                            <input id="group_name" name="group_name" type="text" placeholder="Name"
+                                   required pattern=".*\S+.*" data-validation-required-message="Please enter your  group's name.">
+                            <div class="invalid-feedback">
+                                Please provide a group name.
+                            </div>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                            <label>Invite up to {{max_group_size - 1 }} members by their email!</label>
+                            <input type='text' id='example_emailB' name='example_emailB' class='form-control' value=''>
+                            <!--<input class="magicsearch" id="basic" placeholder="Search users!" name="magicsearch">-->
+
+                        </div>
+                    </div>
+
+
+                   <!-- <script>
+        $(function() {
+
+            var dataSource = [
+            {% for index in range(0, user_ids|length) %}
+                {id: {{index+1}}, userID: "{{user_ids[index]}}"},
+            {% endfor %}
+            ];
+            $('#basic').magicsearch({
+                dataSource: dataSource,
+                fields: ['userID'],
+                id: 'id',
+                format: '%userID%',
+                multiple: false,
+                focusShow: true,
+                multiField: 'userID',
+                multiStyle: {
+                    space: 5,
+                    width: 80
+                }
+
+            });
+        });
+
+
+                    </script>-->
+
+
+                    <!--
+                  <div class="control-group">
+                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                      <label>Email Address</label>
+                      <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address.">
+                      <p class="help-block text-danger"></p>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                      <label>Phone Number</label>
+                      <input class="form-control" id="phone" type="tel" placeholder="Phone Number" required="required" data-validation-required-message="Please enter your phone number.">
+                      <p class="help-block text-danger"></p>
+                    </div>
+                  </div>
+                  <div class="control-group">
+                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                      <label>Message</label>
+                      <textarea class="form-control" id="message" rows="5" placeholder="Message" required="required" data-validation-required-message="Please enter a message."></textarea>
+                      <p class="help-block text-danger"></p>
+                    </div>
+                  </div>
+                  -->
+                    <br><br><br>
+                    <div id="success"></div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-danger spotify_button" id="sendMessageButton"><h4> Create
+                            Group </h4></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+<br>
+
+
+<!-- Footer -->
+<footer class="py-5 bg-black">
+    <div class="container">
+        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<!--<script src="static/vendor/jquery/jquery.min.js"></script>-->
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+ sudo apt-get update
+ sudo apt-get install postgresql postgresql-contrib 
+ sudo apt-get install python-psycopg2
+ sudo apt-get install libpq-dev 
+ pip install psycopg2
+
+FOR UBUNTU AFTER INSTALLATION
+=============================
+sudo -u postgres psql
+ALTER USER postgres PASSWORD '!mg2019';
+
+flask session
+=============
+pip install Flask-Session
+pip install Flask-Mail
+
+flask mail
+------------
+pip install Flask-Mail
+
+Spotify API
+-----------
+pip install spotipy
+
+For creating DB on Postgres:
+
+https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line

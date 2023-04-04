@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}?rnd=3">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="static/vendor/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/vendor/bootstrap/js/rater.js" charset="utf-8"></script>
+
+    <!-- Flickty -->
+    <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+    <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="user_profile">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="create_group">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="my_groups">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<br><br><br>
+
+
+<!--<section>
+    <div class="container">
+        <div class="row align-items-center">
+
+            <br>
+            {% for index in range(0, recommendations|length) %}
+            <iframe src="{{recommendations[index]}}" width="300" height="380" frameborder="0"
+                    allowtransparency="true"
+                    allow="encrypted-media"></iframe>
+            <br>
+
+
+            {% endfor %}
+        </div>
+    </div>
+</section>-->
+
+<!--<section>
+    <div class="container">
+
+        <div class="carousel" data-flickity='{ "accessibility": true }'>
+
+            {% for index in range(0, recommendations|length) %}
+            <div class="carousel-cell">
+                <iframe src="{{recommendations[index]}}" width="300" height="380" frameborder="0"
+                        allowtransparency="true"></iframe>
+
+
+                <br>
+                <center>
+                    {{explanations[index]}}
+
+                </center>
+                <br>
+                <br>
+                <br>
+            </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+</section>-->
+
+<br><br>
+
+             <form action="create_playlist" method="get">
+                <center>
+                    <button type="submit" class="btn btn-danger spotify_button" id="" style=""><h4><i
+                            class="fab fa-spotify"></i> Add to Spotify!</h4></button>
+                </center>
+            </form>
+
+  {% for index in range(0, recommendations|length) %}
+  <section>
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <div class="p-5">
+             <iframe src="{{recommendations[index]}}" width="300" height="380" frameborder="0"
+                            allowtransparency="true"></iframe>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="p-5">
+               <h3>{{explanations[index]}}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<br>
+{% endfor %}
+<!-- Footer -->
+<footer class="py-5 bg-black">
+    <div class="container">
+        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+
+
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

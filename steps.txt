@@ -1,0 +1,51 @@
+Install Anaconda Python 3.7 version
+Get Pycharm
+pip install Flask-Session
+pip install Flask-Mail
+pip install psycopg2
+pip install spotipy
+
+For the SPOTIFY API
+===================
+See config.py for application credential details! for now it is Mesut's account that we use for application!
+
+
+PostgreSQL Installation For Mac
+===============================
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+brew update
+brew install postgresql
+initdb /usr/local/var/postgres
+
+Start & Stop DB Manually
+========================
+pg_ctl -D /usr/local/var/postgres start
+pg_ctl -D /usr/local/var/postgres stop
+
+Create a user (It will ask passwd see config file for the passwd!)
+==============
+createuser --pwprompt postgres
+
+Create DB
+==========
+createdb -Opostgres -Eutf8 musicgroup
+
+Connect to DB
+=============
+psql -U postgres musicgroup
+
+Run db_operations.py to call the following methods!
+    create_table(query) => For all tables query will be changed to the applicable one!
+
+FOR UBUNTU
+==========
+sudo -u postgres psql
+ALTER USER postgres PASSWORD '!mg2019';
+
+More Command Line operations for DB
+===================================
+https://www.a2hosting.com/kb/developer-corner/postgresql/managing-postgresql-databases-and-users-from-the-command-line
+
+For Survey Maybe Use the following:
+
+https://surveyjs.io/Examples/Library/?id=real-productfeedback&platform=jQuery&theme=default

@@ -1,0 +1,41 @@
+1) Get User Profile Information: From Spotify API we can get Spotify userName which is being as unique user identifier.
+   But, not all Spotify users provides their names. Should we have a complete profile page (after the signup) to ask
+   users about their basic info? i.e., name, age, gender...
+
+2) Finalize Group: We must decide on finalizing the group criteria. For instance:
+   a) If a group invitation has been sent to 3 other members and they all accept the invitation, then it is obvious
+   to finalize the group. (We have this functionality in the code)
+   b) Should the creator of the group finalize the group with a button?
+   c) How do we finalize if only one invitation has been sent, and invited member accepted the invitation? Because, they
+   can still invite 2 more members. Let's say they do not invite more members. Should we have a time limit to automatically
+   finalize the groups? (e.g. finalize the group after 1 week of creation time)
+
+3) Should we send an e-mail to the group members after the group has been finalized, so that they will know that they
+   have to rate the initial song list of a group? Note that, they can see from their groups page if a group has been
+   finalized, basically a button is being activated that redirects them to rate the initial songs page.
+
+4) What happens if some group members do not rate the preferences? Do we discard those groups from the user study?
+
+5) Will we use the name of the song in the explanations? If yes, then get track details functionality will be implemented
+   and, track information will be saved to DB.
+
+6) Leave Group: There are different scenarios:
+   a) Leave the group while the others rate the initial songs? Then I guess we keep the songs of the member that left
+   the group in the groups' initial songs.
+   b) Before the group is finalized. This is a straightforward scenario.
+   c) After the recommendations have been generated. Do we recompute recommendations? Do we exclude that user's ratings?
+
+7) Requirements for the Explanations is needed. For now see explanations.py file. While in the code, generate recommendations
+   is triggered we will be able to generate explanations as well. The code is generic, and it can produce explanations
+   for each combination of aggregation_strategy and explanation style. The generated explanations will be saved to DB!
+   Later in the survey we can get whichever explanation we want.
+
+8) Requirements for the Survey is needed. What will be the questions that we will ask. How many recommendations will
+   group members evaluate etc.
+
+NOTES: There are still some improvements needed in the backend, like using Connection Pooling, in some parts using
+       Exception Handling.
+
+
+TODO: For survey.html survey.onComplete send the json result to the backend!
+I have to embed songs and explanations within the survey!

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+ 
+<div class="block1">
+<h1>Discover Music as a group!</h1>
+  <p>Your top tracks!</p>
+
+</div>
+<div class="block1">
+        <center>
+            {% for track in top_tracks %}
+                <iframe src="{{track}}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <br>
+            {% endfor %}
+        </center>
+</div>
+
+
+{% endblock %}
+
+

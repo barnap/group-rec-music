@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Discover Music as a Group!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
+
+    <script type="text/javascript" src='http://code.jquery.com/jquery-latest.min.js'></script>
+    <script type="text/javascript" src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Custom styles for this template -->
+    <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+    <script type="text/javascript" src="static/vendor/bootstrap/js/multiple-emails.js"></script>
+    <link type="text/css" rel="stylesheet" href="static/css/multiple-emails.css"/>
+    <script>
+    		$(function() {
+			//To render the input device to multiple email input using a simple hyperlink text
+			$('.form-control').multiple_emails({theme: "Basic"});
+			var id = this.id;
+
+			//Shows the value of the input device, which is in JSON format
+			$('#current_emailsB').text($('#'.concat(id)).val());
+			$('#'.concat(id)).change( function(){
+				$('#current_emailsB').text($(this).val());
+			});
+		});
+
+
+
+
+
+    </script>
+
+</head>
+
+<body>
+
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="user_profile">My profile!</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="create_group">Create Group</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">My groups</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<br><br><br>
+
+<section>
+    <div class="container">
+        <div class="row align-items-center">
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    <span>{{ message }}</span>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+        </div>
+    </div>
+</section>
+
+{% for group in my_groups %}
+
+<section>
+    <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-lg-6 order-lg-1">
+                <div class="p-5">
+                    <h2 class="display-4">{{my_groups[group]['name']}}</h2>
+                    <center>
+                        <p>
+                            Group Members: <br>
+                            {% for member in my_groups[group]['members']%}
+                            {{member}} <br>
+                            {% endfor %} <br>
+                            {% if my_groups[group]['inviteds'] != []%}
+                            Inviteds: <br>
+                            {% for invited in my_groups[group]['inviteds']%}
+                            {{invited[0]}} invited by {{invited[1]}} {{invited[2]}}
+                            {% endfor %}
+                            {% endif %}
+                            {% if my_groups[group]['members']|length + my_groups[group]['inviteds']|length<
+                            max_group_size and not my_groups[group]['finalized']%}
+
+                        <form name="inviteMembers" id="{{group}}form" novalidate="novalidate" action="invite_members"
+                              method="post">
+                            <label>You can invite up to {{ max_group_size - ( my_groups[group]['members']|length +
+                                my_groups[group]['inviteds']|length) }} more members by their email!</label>
+                            <input type='text' id="{{group}}" name="{{group}}" class='form-control' value=''>
+                            <button type="submit" class="btn btn-info" id="sendMessageButton"> Send invitation</button>
+                        </form>
+                        {% endif %}
+
+                        </p>
+                        <!-- NOTE THAT GROUP MUST BE FINALIZED SO THAT USER CAN RATE THE GROUP SONGS!-->
+                        <!-- USERS MUST SEE THE BUTTON ONLY TO RATE, IF THEY RATE, IT SHOULD DISAPPEAR! -->
+                        {% if my_groups[group]['finalized'] and not my_groups[group]['rated']%}
+                        <a href="rate_group_prefs?group_id={{group}}" class="btn btn-info" role="button">Rate Group Initial
+                            songs</a>
+                        {% endif %}
+                        {% if my_groups[group]['recommended']%}
+                        <a href="get_group_recs?group_id={{group}}" class="btn btn-info" role="button">Group
+                            Recommendations</a>
+
+                        {% endif %}
+                        {% if my_groups[group]['created_by'] == current_user and my_groups[group]['members']|length >=2 and not my_groups[group]['finalized']%}
+                        <!-- FINALIZE GROUP if current user created it and at least it has 2 members!-->
+                        <a href="finalize_group?group_id={{group}}" class="btn btn-info" role="button">Finalize Group</a>
+                        {% endif %}
+                    </center>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<hr/>
+{% endfor %}
+
+<section>
+
+
+</section>
+
+<!-- Footer -->
+<footer class="py-5 bg-black">
+    <div class="container">
+        <p class="m-0 text-center text-white small">Copyright &copy; GroupMusic 2019</p>
+    </div>
+    <!-- /.container -->
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<!--<script src="static/vendor/jquery/jquery.min.js"></script>-->
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

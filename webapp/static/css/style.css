@@ -1,0 +1,86 @@
+.important { color: #336699; }
+
+body {background-color: #f2f2f2; color: #555; font-family: 'Helvetica Neue','Helvetica','Arial',sans-serif}
+
+.container {
+	    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+
+}
+
+.background-image {
+	background-size: cover;
+    /*-webkit-filter: blur(2px);*/
+    height: 100%;
+    left: 0;
+    position: fixed;
+    right: 0;
+    /* z-index: 1; */
+}
+
+.main_area {
+	background-color: #f2f2f2;
+	padding:3%;
+	margin-top:5%;
+	margin-bottom:5%;
+    opacity: 0.9;
+}
+
+.footer {
+   border-top: 1px solid #333;
+   padding-top:5%;
+}
+
+a {
+    text-decoration: none;
+    color:#555;
+    font-weight: 600;
+}
+
+.btn {
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+
+.spotify_button {
+    background-color:#84bd00;
+    border:1px solid #84bd00;
+    color: white;
+}
+
+.spotify_button:hover {
+    background-color: white;
+    color: #84bd00;
+    border:1px solid #84bd00;
+}
+
+.spotify_button:active:focus,
+.spotify_button:active.focus {
+    background-color: white;
+    color: #84bd00;
+    border:1px solid #84bd00;
+}
+
+.facebook_button {
+    background-color: #2650A8;
+    border: 1px solid #2650A8;
+    color: white;
+}
+
+.facebook_button:hover {
+    background-color: white;
+    border: 1px solid #2650A8;
+    color: #2650A8;
+}
+
+.facebook_button:active,
+.facebook_button.active {
+    background-color: white;
+    border: 1px solid #2650A8;
+    color: #2650A8;
+}
+
+
