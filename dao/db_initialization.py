@@ -5,7 +5,7 @@ import config
 def create_database():
     drop_database_query = '''DROP DATABASE IF EXISTS  ''' + config.database + ''';'''
 
-    create_database_query = '''CREATE DATABASE ''' + config.database + '''
+    create_database_query = '''CREATE DATABASE IF NOT EXISTS ''' + config.database + '''
             WITH
             OWNER = %s
             TABLESPACE = pg_default
@@ -14,8 +14,8 @@ def create_database():
         '''
 
     db = db_utils.create_connection_dbms()
-    cur = db.cursor()
-    cur.execute(drop_database_query)
+    # cur = db.cursor()
+    # cur.execute(drop_database_query)
 
     cur = db.cursor()
     cur.execute(create_database_query, (config.user,))
