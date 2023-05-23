@@ -3,7 +3,7 @@ from dao import dao_session_info
 import config
 
 def create_database():
-    drop_database_query = '''DROP DATABASE IF EXISTS  ''' + config.database + ''';'''
+    # drop_database_query = '''DROP DATABASE IF EXISTS  ''' + config.database + ''';'''
 
     create_database_query = '''CREATE DATABASE IF NOT EXISTS ''' + config.database + '''
             WITH
