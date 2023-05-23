@@ -8,9 +8,6 @@ def create_database():
     create_database_query = '''CREATE DATABASE ''' + config.database + '''
             WITH
             OWNER = %s
-            ENCODING = 'UTF8'
-            LC_COLLATE = 'C'
-            LC_CTYPE = 'C'
             TABLESPACE = pg_default
             CONNECTION LIMIT = -1
             IS_TEMPLATE = False;
