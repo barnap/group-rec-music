@@ -8,6 +8,10 @@ import requests
 
 from spotipy.oauth2 import SpotifyOauthError
 
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 import config
 
 
@@ -38,12 +42,64 @@ def create_random_pairs_from_pairs_list(pairs_list):
 
 
 def send_invite_friend(friend_email, current_user_email, mail):
-    email_text = config.INVITATION_EMAIL_TEXT.replace("<EmailFriend>", current_user_email)
-    msg = Message(subject="Invitation to participate in a user study",
-                  # sender=config.mail_settings["MAIL_USERNAME"],
-                  recipients=[friend_email],
-                  body=email_text)
-    mail.send(msg)
+    # email_text = config.INVITATION_EMAIL_TEXT.replace("<EmailFriend>", current_user_email)
+    # print("MAIL_USE_SSL", config.mail_settings["MAIL_USE_SSL"])
+    # print("MAIL_USE_TLS", config.mail_settings["MAIL_USE_TLS"])
+    # msg = Message(subject="Invitation to participate in a user study",
+    #               # sender=config.mail_settings["MAIL_USERNAME"],
+    #               recipients=[friend_email],
+    #               body=email_text)
+    # mail.send(msg)
+
+    # ALTERNATIVE EMAIL
+
+    email_address = friend_email
+    email_subject = "Invitation to participate in a user study"
+    email_message = config.INVITATION_EMAIL_TEXT.replace("<EmailFriend>", current_user_email)
+
+    sender_email = config.mail_settings["MAIL_DEFAULT_SENDER"]
+    sender_password = config.mail_settings["MAIL_PASSWORD"]
+    receiver_email = friend_email
+
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = receiver_email
+    message['Subject'] = email_subject
+    message.attach(MIMEText(email_message, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, sender_password)
+    server.sendmail(sender_email, receiver_email, message.as_string())
+    server.quit()
+
+    print('Email Sent!')
+
+
+def send_email_start_session(email_to_send, session_to_start):
+    email_address = email_to_send
+    email_subject = config.NOTIFICATION_SESSION_START_EMAIL_SUBJECT[session_to_start]
+    email_message = config.NOTIFICATION_SESSION_START_EMAIL_TEXT[session_to_start]
+
+    sender_email = config.mail_settings["MAIL_DEFAULT_SENDER"]
+    sender_password = config.mail_settings["MAIL_PASSWORD"]
+    receiver_email = email_to_send
+
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['To'] = receiver_email
+    message['Subject'] = email_subject
+    message.attach(MIMEText(email_message, 'plain'))
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(sender_email, sender_password)
+    server.sendmail(sender_email, receiver_email, message.as_string())
+    server.quit()
+
+    print('Email Sent!')
+
+
 
 
 def get_access_token(code):

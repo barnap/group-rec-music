@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Music Recommendations</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}?rnd=3">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="static/css/one-page-wonder.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+
+
+<!--  <header class="masthead text-left text-white">-->
+  <header class="text-left text-white">
+<!--    <div class="bg-circle-1 bg-circle"></div>-->
+<!--    <div class="bg-circle-2 bg-circle"></div>-->
+<!--    <div class="bg-circle-3 bg-circle"></div>-->
+<!--    <div class="bg-circle-4 bg-circle"></div>-->
+
+
+
+    <div class="masthead-content">
+<!--      <div -->
+      <div class="container">
+<!--              {{session['self_evals']}}-->
+          <canvas id="song_self_eval_chart" style="width:100%;max-width:700px"></canvas>
+
+          <canvas id="FFM_AGR" style="width:100%;max-width:400px"></canvas>
+          <canvas id="FFM_CON" style="width:100%;max-width:400px"></canvas>
+          <canvas id="FFM_EXT" style="width:100%;max-width:400px"></canvas>
+          <canvas id="FFM_OPE" style="width:100%;max-width:400px"></canvas>
+          <canvas id="FFM_EMO" style="width:100%;max-width:400px"></canvas>
+
+
+
+      </div>
+    </div>
+
+  </header>
+
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<script>
+new Chart("song_self_eval_chart", {
+  type: "bar",
+  data: {
+    labels: ['missing','0-9', '10-19' , '20-29' , '30-39' , '40-49' , '50-59' , '60-69 ', '70-79 ', '80-89 ', '90-100 '],
+    datasets: [{
+      backgroundColor: ["red", "blue", "blue" , "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue"],
+      data: [{{session['self_evals'][-1]}},{{session['self_evals'][0]}},{{session['self_evals'][1]}},{{session['self_evals'][2]}},{{session['self_evals'][3]}},{{session['self_evals'][4]}},{{session['self_evals'][5]}},{{session['self_evals'][6]}},{{session['self_evals'][7]}},{{session['self_evals'][8]}},{{session['self_evals'][9]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Self Evaluations of Songs"
+    }
+  }
+});
+
+new Chart("FFM_AGR", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['FFM_AGR']['SELF'][0]}},{{session['FFM_AGR']['SELF'][1]}},{{session['FFM_AGR']['SELF'][2]}},{{session['FFM_AGR']['SELF'][3]}},{{session['FFM_AGR']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['FFM_AGR']['PEER'][0]}},{{session['FFM_AGR']['PEER'][1]}},{{session['FFM_AGR']['PEER'][2]}},{{session['FFM_AGR']['PEER'][3]}},{{session['FFM_AGR']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Agreeableness"
+    }
+  }
+});
+
+new Chart("FFM_CON", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['FFM_CON']['SELF'][0]}},{{session['FFM_CON']['SELF'][1]}},{{session['FFM_CON']['SELF'][2]}},{{session['FFM_CON']['SELF'][3]}},{{session['FFM_CON']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['FFM_CON']['PEER'][0]}},{{session['FFM_CON']['PEER'][1]}},{{session['FFM_CON']['PEER'][2]}},{{session['FFM_CON']['PEER'][3]}},{{session['FFM_CON']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Conscentiousness"
+    }
+  }
+});
+
+new Chart("FFM_EXT", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['FFM_EXT']['SELF'][0]}},{{session['FFM_EXT']['SELF'][1]}},{{session['FFM_EXT']['SELF'][2]}},{{session['FFM_EXT']['SELF'][3]}},{{session['FFM_EXT']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['FFM_EXT']['PEER'][0]}},{{session['FFM_EXT']['PEER'][1]}},{{session['FFM_EXT']['PEER'][2]}},{{session['FFM_EXT']['PEER'][3]}},{{session['FFM_EXT']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Extraversion"
+    }
+  }
+});
+
+new Chart("FFM_OPE", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['FFM_OPE']['SELF'][0]}},{{session['FFM_OPE']['SELF'][1]}},{{session['FFM_OPE']['SELF'][2]}},{{session['FFM_OPE']['SELF'][3]}},{{session['FFM_OPE']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['FFM_OPE']['PEER'][0]}},{{session['FFM_OPE']['PEER'][1]}},{{session['FFM_OPE']['PEER'][2]}},{{session['FFM_OPE']['PEER'][3]}},{{session['FFM_OPE']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Openess"
+    }
+  }
+});
+
+new Chart("FFM_EMO", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['FFM_EMO']['SELF'][0]}},{{session['FFM_EMO']['SELF'][1]}},{{session['FFM_EMO']['SELF'][2]}},{{session['FFM_EMO']['SELF'][3]}},{{session['FFM_EMO']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['FFM_EMO']['PEER'][0]}},{{session['FFM_EMO']['PEER'][1]}},{{session['FFM_EMO']['PEER'][2]}},{{session['FFM_EMO']['PEER'][3]}},{{session['FFM_EMO']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Emotional Stability"
+    }
+  }
+});
+</script>
+
+</body>
+
+</html>

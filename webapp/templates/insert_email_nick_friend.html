@@ -50,10 +50,10 @@
                class="form-control mb-4" value="{{ session['email_friend'] }} " required>
     {% else %}
         <input type="email" id="friend_email"  name="friend_email"
-               class="form-control mb-4" placeholder="Your friend's email address"required>
+               class="form-control mb-4" placeholder="Your friend's email address - will be used to send an invitation to your friend"required>
     {% endif %}
     <input type="text" id="nickname_friend" name="friend_nickname"
-           class="form-control mb-4" placeholder="Your friend's nickname" required>
+           class="form-control mb-4" placeholder="Your friend's nickname - will be used to identify your friend in the scenarios presented in the next steps" required>
 
     <button id="s1_submit" name="s1_submit" value="s1_submit"
             class="btn btn-info btn-block" type="submit" >Submit</button>

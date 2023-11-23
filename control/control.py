@@ -5,11 +5,15 @@ from dao import dao_user, dao_playlist, dao_session_info, db_utils
 import config
 
 from utils import utils, spotify_utils as helper
+from flask import Response
+
+from math import floor
+from random import randint
 
 sys.path.append('../')
 
 
-def manage_logged_user(current_user_id, invited, sp):
+def manage_logged_user(current_user_id, invited, sp=None):
     """
     Check if the user is in the DB. If not, it creates the instances for the user
     :param current_user_id:
@@ -20,40 +24,34 @@ def manage_logged_user(current_user_id, invited, sp):
     # check if the user exists in the DB: load user info, if the user doesn't exist we receive an empty dict
     user = dao_user.load_user_data(current_user_id)
 
+    is_admin = False
+
+    if current_user_id in config.ADMIN_USER_ID_LIST:
+        is_admin = True
+
     if not user:
         # the user is not in the DB
         # we create a new user with the given id
 
         is_user = True
-        is_admin = False
-
-        if current_user_id in config.ADMIN_USER_ID_LIST:
-            is_admin = True
+        dao_user.create_new_user(current_user_id, invited, is_user, is_admin)
 
         #TODO: CREATE TRANSACTION ? IF THE USER IS CREATED AND THE SONGS ARE NOT INITIALIZED?
-        dao_user.create_new_user(current_user_id, invited, is_user, is_admin)
 
         # select the tracks for the user
 
-        top_track_ids = helper.get_selected_tracks(sp)
+        user_track_ids = helper.get_selected_tracks(sp)
 
-        print("selected tracks: ", len(top_track_ids))
+        print("selected tracks: ", len(user_track_ids))
 
-        dao_playlist.create_basic_playlists_for_user(current_user_id, top_track_ids)
+        dao_playlist.create_basic_playlists_for_user(current_user_id, user_track_ids)
 
         user = dao_user.load_user_data(current_user_id)
 
-        # # Here get track information and audio features as well and save them to DB!
-        # tracks_dict, tracks_audio_dict = help.get_track_information(sp, top_track_ids)
-        #
-        # # Insert the tracks to DB!
-        # generate_insert_tracks_query(tracks_dict, tracks_audio_dict)
-        # query, params = update_users_top_tracks(top_track_ids, current_user_id)
-        # db_insert(query, params)
-        # query, params = insert_users_top_tracks(current_user_id, top_track_ids)
-        # db_insert(query, params)
-
-    return user, config.CURRENT_VIEW_DICT[user['current_state']]
+    if is_admin:
+        return user, config.ADMIN_VIEW_DICT['ADMIN_DASHBOARD']
+    else:
+        return user, config.CURRENT_VIEW_DICT[user['current_state']]
 
 
 def get_current_view_for_user(current_user_id):
@@ -314,12 +312,12 @@ def __manage_insert_individual_evaluations(current_state, current_user_id, form,
 
     error_message = None
     song_evals_list = list()
-    for i in range(3*config.TRACK_TO_SELECT):
+    for i in range(config.TRACK_NUMBER):
         song_evals_dict = dict()
         song_evals_dict["song_eval"] = float(form.get("SONG_" + str(i)))
         song_evals_dict["song_id"] = form.get("SONG_" + str(i) + "_SONG_ID")
         song_evals_list.append(song_evals_dict)
-    attention = float(form.get("SONG_" + str(3*config.TRACK_TO_SELECT)))
+    attention = float(form.get("SONG_" + str(config.TRACK_NUMBER)))
     if attention >= 75:
         attention_passed = True
     else:
@@ -340,7 +338,7 @@ def __manage_insert_group_eval(current_state, current_user_id, form, invited, re
 
     error_message = None
     song_evals_list = list()
-    for i in range(2*config.TRACK_TO_SELECT):
+    for i in range(config.config.TRACK_NUMBER):
         song_evals_dict = dict()
         print("SONG_" + str(i))
         print(form.get("SONG_" + str(i)))
@@ -349,7 +347,7 @@ def __manage_insert_group_eval(current_state, current_user_id, form, invited, re
         song_evals_dict["relationship"] = relationship
         song_evals_list.append(song_evals_dict)
 
-    attention = float(form.get("SONG_" + str(2*config.TRACK_TO_SELECT)))
+    attention = float(form.get("SONG_" + str(config.TRACK_NUMBER)))
     if attention >= 75:
         attention_passed = True
     else:
@@ -574,7 +572,7 @@ def manage_offline_pairing(current_user_id):
         # the user is not an admin
         return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
 
-    __remove_pairs_songs_from_playlists()
+    # __remove_pairs_songs_from_playlists()
 
     __generate_strangers_pairs()
 
@@ -615,13 +613,25 @@ def __complete_playlists():
         friends_songs_to_add = songs_dict[friend_id]
         stranger_songs_to_add = songs_dict[stranger_id]
 
-        print("Adding songs for user " + user_id + " friend playlist")
-        dao_playlist.add_songs_to_user_playlist(user_id, friends_songs_to_add, 'friend', friend_id)
+        # print("Adding songs for user " + user_id + " friend playlist")
+        # dao_playlist.add_songs_to_user_playlist(user_id, friends_songs_to_add, 'friend', friend_id)
         dao_playlist.update_pair_id_for_original_songs(user_id, 'friend', friend_id)
 
-        print("Adding songs for user " + user_id + " stranger playlist")
-        dao_playlist.add_songs_to_user_playlist(user_id, stranger_songs_to_add, 'stranger', stranger_id)
+        # print("Adding songs for user " + user_id + " stranger playlist")
+        # dao_playlist.add_songs_to_user_playlist(user_id, stranger_songs_to_add, 'stranger', stranger_id)
         dao_playlist.update_pair_id_for_original_songs(user_id, 'stranger', stranger_id)
+
+    playlist_table_list = dao_playlist.load_playlists_table()
+
+    for eval_dict in playlist_table_list:
+        original_song_id = eval_dict["song_id"]
+        original_user_id = eval_dict["user_id"]
+        original_self_eval = eval_dict["self_eval"]
+        original_peer_id = eval_dict["peer_id"]
+
+        dao_playlist.update_peer_evaluation(original_peer_id, original_user_id, original_song_id, original_self_eval)
+
+
 
 
 def start_session_two(current_user_id):
@@ -642,9 +652,29 @@ def start_session_two(current_user_id):
     dao_session_info.update_current_session(2)
 
     return config.ADMIN_VIEW_DICT['PROCESS_COMPLETED'], None, None
+#
+#
+# def start_session_three(current_user_id):
+#     # 1) check if user_id is admin, if not return error no admin page
+#     # 2) if admin, go on
+#
+#     user = dao_user.load_user_data(current_user_id)
+#
+#     if not user:
+#         # the user is not in the DB
+#         return config.ERROR_VIEW_DICT['INVALID_USER'], None, None
+#
+#     if not user["is_admin"]:
+#         # the user is not an admin
+#         return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
+#
+#     dao_user.start_session_three()
+#     dao_session_info.update_current_session(3)
+#
+#     return config.ADMIN_VIEW_DICT['PROCESS_COMPLETED'], None, None
 
 
-def start_session_three(current_user_id):
+def start_next_session(current_user_id):
     # 1) check if user_id is admin, if not return error no admin page
     # 2) if admin, go on
 
@@ -658,10 +688,35 @@ def start_session_three(current_user_id):
         # the user is not an admin
         return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
 
-    dao_user.start_session_three()
-    dao_session_info.update_current_session(3)
+    current_session = dao_session_info.load_current_session()
 
-    return config.ADMIN_VIEW_DICT['PROCESS_COMPLETED'], None, None
+    if current_session==1:
+        # Offline pairing
+        # __remove_pairs_songs_from_playlists()
+        __generate_strangers_pairs() # GENERATES PAIRS OF STRANGERS AND SAVES THEM IN THE USER_APP TABLE
+        __complete_playlists() # SAVES PAIRS EVALUATIONS
+
+        # Start session 2
+        dao_user.start_session_two()
+        dao_session_info.update_current_session(2)
+        __send_notification_start_session(2)
+    # elif current_session==2:
+    #
+    #     # Start session 3
+    #     dao_user.start_session_three()
+    #     dao_session_info.update_current_session(3)
+    #     __send_notification_start_session(3)
+
+    # LOAD INFO FOR ADMIN DASHBOARD
+    current_state, error_msg, add_to_session = __load_users_info()
+
+    return config.ADMIN_VIEW_DICT[current_state], None, None
+
+
+def __send_notification_start_session(session_to_start):
+    user_email_list = dao_user.get_user_email_list()
+    for email in user_email_list:
+        utils.send_email_start_session(email, session_to_start)
 
 
 def manage_submit_admin(current_user_id):
@@ -683,10 +738,150 @@ def manage_submit_admin(current_user_id):
 
     return config.ADMIN_VIEW_DICT[current_state], error_msg, add_to_session
 
+
+def manage_download_users_admin(current_user_id):
+    # 1) check if user_id is admin, if not return error no admin page
+    # 2) if admin, go on
+
+    user = dao_user.load_user_data(current_user_id)
+
+    if not user:
+        # the user is not in the DB
+        return config.ERROR_VIEW_DICT['INVALID_USER'], None, None
+
+    if not user["is_admin"]:
+        # the user is not an admin
+        return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
+
+    # LOAD INFO FOR ADMIN DASHBOARD
+    json = dao_user.load_users_table_as_json()
+
+    return config.ADMIN_VIEW_DICT['ADMIN_DASHBOARD'], "OK", json
+
+
+def manage_download_playlists_admin(current_user_id):
+    # 1) check if user_id is admin, if not return error no admin page
+    # 2) if admin, go on
+
+    user = dao_user.load_user_data(current_user_id)
+
+    if not user:
+        # the user is not in the DB
+        return config.ERROR_VIEW_DICT['INVALID_USER'], None, None
+
+    if not user["is_admin"]:
+        # the user is not an admin
+        return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
+
+    # LOAD INFO FOR ADMIN DASHBOARD
+    json = dao_playlist.load_playlists_table_as_json()
+
+    return config.ADMIN_VIEW_DICT['ADMIN_DASHBOARD'], "OK", json
+
+
+def manage_load_admin_stats(current_user_id):
+    # 1) check if user_id is admin, if not return error no admin page
+    # 2) if admin, go on
+
+    user = dao_user.load_user_data(current_user_id)
+
+    if not user:
+        # the user is not in the DB
+        return config.ERROR_VIEW_DICT['INVALID_USER'], None, None
+
+    if not user["is_admin"]:
+        # the user is not an admin
+        return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
+
+    # LOAD INFO FOR ADMIN DASHBOARD
+    current_state, error_msg, add_to_session = __load_admin_stats()
+
+    return config.ADMIN_VIEW_DICT[current_state], error_msg, add_to_session
+
+
+def __load_admin_stats():
+    add_to_session = dict()
+
+    # load initial evaluations ratings
+    songs_eval = dao_playlist.load_songs_self_eval()
+    bins = dict()
+    bins[-1] = 0
+    for i in range(10):
+        # bins[i] = randint(1,100)
+        bins[i] = 0
+
+    for song_eval in songs_eval:
+        if song_eval == 100:
+            bins[9] = bins[9] + 1
+        else:
+            bins[floor(song_eval/10)] = bins[floor(song_eval/10)] + 1
+
+    add_to_session['self_evals'] = bins
+
+    # load self and peer evaluations for FFM traits
+    personality_values = dao_user.load_personality_values()
+    for instrument in config.PERSONALITY_INSTRUMENTS:
+        for trait in config.PERSONALITY_TRAITS[instrument]:
+            add_to_session[instrument + '_' + trait] = __generate_bins_trait(
+                personality_values[instrument][trait], 5,
+                config.PERSONALITY_INSTRUMENT_MIN_VALUE[instrument], config.PERSONALITY_INSTRUMENT_MAX_VALUE[instrument])
+
+    # bins = dict()
+    # bins[-1] = 0
+    # for i in range(10):
+    #     # bins[i] = randint(1,100)
+    #     bins[i] = 0
+    #
+    # for song_eval in songs_eval:
+    #     if song_eval == 100:
+    #         bins[9] = bins[9] + 1
+    #     else:
+    #         bins[floor(song_eval/10)] = bins[floor(song_eval/10)] + 1
+    #
+    # add_to_session['self_evals'] = bins
+
+    return 'ADMIN_STATS', None, add_to_session
+
+
+def __generate_bins_trait(personality_trait_values, n_bins, min, max):
+    returned_bins = {
+        'SELF' : None, 'PEER' : None
+    }
+
+    bins = dict()
+    for i in range(n_bins):
+        bins[i] = 0
+
+    #SELF
+    for val in personality_trait_values['SELF']:
+        norm_val = n_bins * ((val-min)/(max-min))
+        print(val, norm_val)
+        bins[floor(norm_val)] = bins[floor(norm_val)] + 1
+
+    returned_bins['SELF'] = bins
+
+    #PEER
+    bins = dict()
+    for i in range(n_bins):
+        bins[i] = 0
+
+    for val in personality_trait_values['PEER']:
+        norm_val = n_bins * ((val-min)/(max-min))
+        bins[floor(norm_val)] = bins[floor(norm_val)] + 1
+    returned_bins['PEER'] = bins
+    print(returned_bins)
+    return returned_bins
+
 def __load_users_info():
     add_to_session = dict()
     add_to_session['users_info'] = dao_user.load_all_users()
-    add_to_session['current_session'] = db_utils.get_current_session()
+    current_session = db_utils.get_current_session()
+    add_to_session['current_session'] = current_session
+    if current_session < 3:
+        add_to_session['next_session_button'] = "Start Session " + str(int(current_session)+1)
+    else:
+        add_to_session['next_session_button'] = "---"
+    add_to_session['current_session_statuses'] = config.STATUSES[current_session]
 
     return 'ADMIN_DASHBOARD', None, add_to_session
 
@@ -712,6 +907,9 @@ def is_current_session(session_number):
 
 def get_spotify_app_configurations():
     return config.client_id, config.client_secret, config.scope
+
+def get_google_app_configurations():
+    return config.client_id, config.client_secret, config.google_discovery_url
 
 
 def get_mail_settings():

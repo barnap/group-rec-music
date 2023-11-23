@@ -145,9 +145,16 @@ def get_selected_tracks(sp):
     :param sp: spotipy instance
     :return: a list of spotify tracks!
     '''
-    top_track_ids = get_user_top_track_ids(sp)
+    if not sp:
+        top_track_ids = get_fix_track_ids()
+    else:
+        top_track_ids = get_user_top_track_ids(sp)
 
     return top_track_ids
+
+
+def get_fix_track_ids():
+    return config.FIX_TRACK_ID_LIST
 
 
 def get_user_top_track_ids(sp):
@@ -203,7 +210,15 @@ def get_user_top_track_ids(sp):
     print(len(selected_tracks))
     print(len(selected_artists))
 
-    return get_top_track_ids(selected_tracks)
+    selected_tracks_ids = get_top_track_ids(selected_tracks)
+
+    # TODO: Manage the case in which the user doesn't have enough songs selected
+
+    if len(selected_tracks) < config.TRACK_TO_SELECT:
+        top_song = random.sample(config.TOP_TRACK_ID_LIST, (config.TRACK_TO_SELECT-len(selected_tracks)))
+        selected_tracks_ids.extend(top_song)
+
+    return selected_tracks_ids
 
 
 def get_top_tracks(sp, time_range):

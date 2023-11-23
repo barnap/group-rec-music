@@ -1,11 +1,39 @@
 import dao.db_utils as db_utils
-from dao import dao_session_info
+from dao import dao_session_info, dao_user
 import config
+import control
+from utils import utils
+
+def drop_database():
+    drop_database_query = '''DROP DATABASE IF EXISTS  ''' + config.database + ''';'''
+    db = db_utils.create_connection_dbms()
+    cur = db.cursor()
+    cur.execute(drop_database_query)
+
+    print('Database deleted')
+    db.close()
+
+def check_databas_exists():
+    exist_db_query = '''select exists(SELECT datname FROM pg_catalog.pg_database WHERE datname = %s );'''
+    db = db_utils.create_connection_dbms()
+    # cur = db.cursor()
+    # cur.execute(drop_database_query)
+
+    cur = db.cursor()
+    cur.execute(exist_db_query, (config.database,))
+
+    result = cur.fetchone()
+    print('Executed the query')
+    print(result[0])
+    db.close()
+
+    return result[0]
+
 
 def create_database():
     # drop_database_query = '''DROP DATABASE IF EXISTS  ''' + config.database + ''';'''
 
-    create_database_query = '''CREATE DATABASE IF NOT EXISTS ''' + config.database + '''
+    create_database_query = '''CREATE DATABASE ''' + config.database + '''
             WITH
             OWNER = %s
             TABLESPACE = pg_default
@@ -140,11 +168,20 @@ def create_session_info_table():
 
 
 if __name__ == '__main__':
-    create_database()
-    create_user_table()
-    create_playlist_table()
-    create_session_info_table()
-    dao_session_info.init_session_info()
-    print("CURRENT SESSION: ", dao_session_info.load_current_session())
+    # drop_database()
+    # print(dao_user.get_user_email_list())
+    # user_email_list = dao_user.get_user_email_list()
+    # for email in user_email_list:
+    #     utils.send_email_start_session_2(email)
 
+    # dao_session_info.init_session_info()
 
+    if check_databas_exists():
+        print("THE DATABASE ALREADY EXISTS")
+    else:
+        create_database()
+        create_user_table()
+        create_playlist_table()
+        create_session_info_table()
+        dao_session_info.init_session_info()
+        print("CURRENT SESSION: ", dao_session_info.load_current_session())

@@ -31,29 +31,81 @@
 
 
   <header class="masthead text-left text-white">
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+
+
+
     <div class="masthead-content">
       <div class="container">
-          <p class="h4 mb-4">CURRENT SESSION: {{session['current_session']}}</p>
+          <table class="table table-borderless">
+                   <tbody>
+                        <tr>
+                            <th>
+                              <p class="h4 mb-4">CURRENT SESSION: {{session['current_session']}}</p>
+                            </th>
+                            <th>
+                                <form action="admin" method="post">
+                                  <button id="next_session_admin" name="next_session_admin" value="next_session_admin"
+                                    class="btn btn-info" type="submit" >{{session['next_session_button']}}</button>
+                                </form>
+                            </th>
+                            <th>
+                                <form action="download_users" method="post">
+                                  <button id="download_users_admin" name="download_users_admin" value="download_users_admin"
+                                    class="btn btn-info" type="submit" >Download User Table</button>
+                                </form>
+                            </th>
+                            <th>
+                                <form action="download_playlists_eval" method="post">
+                                  <button id="download_playlist_admin" name="download_playlist_admin" value="download_playlist_admin"
+                                    class="btn btn-info" type="submit" >Download Playlist Evaluation Table</button>
+                                </form>
+                            </th>
 
-          <table class="table table-borderless p-2">
+                            <th>
+                                <form action="/admin_stats" method="post" target="_blank">
+                                  <button id="admin_stats" name="admin_stats" value="admin_stats"
+                                    class="btn btn-info" type="submit" >Statistics</button>
+                                </form>
+                            </th>
+                        </tr>
+                   </tbody>
+              </table>
+
+
+          <table class="table table-borderless table-dark p-2">
                <tbody>
                     <tr>
 
-                        <th>Id
-                        </th>
+<!--                        <th>Id-->
+<!--                        </th>-->
                         <th>Email
                         </th>
                         <th>Current State
+                        </th>
+                        <th>Invited Friend Email
+                        </th>
+                        <th>Friend Accepted Invite
                         </th>
                     </tr>
                     {% for user in session['users_info'] %}
                     <tr>
 
-                        <th>{{ user['id'] }}
-                        </th>
+<!--                        <th>{{ user['id'] }}-->
+<!--                        </th>-->
                         <th>{{ user['email'] }}
                         </th>
-                        <th>{{ user['current_state'] }}
+                        <th>{{ user['current_state'] }} - {{ user['completion_percentage'] }}%
+                            <div class="progress">
+                              <div class="progress-bar" role="progressbar" style="width: {{user['completion_percentage']}}%" aria-valuenow="{{user['completion_percentage']}}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </th>
+                        <th>{{ user['invited_friend'] }}
+                        </th>
+                        <th>{{ user['friend_accepted'] }}
                         </th>
                     </tr>
                     {% endfor %}
@@ -71,10 +123,7 @@
 
       </div>
     </div>
-    <div class="bg-circle-1 bg-circle"></div>
-    <div class="bg-circle-2 bg-circle"></div>
-    <div class="bg-circle-3 bg-circle"></div>
-    <div class="bg-circle-4 bg-circle"></div>
+
   </header>
 
   <script src="static/vendor/jquery/jquery.min.js"></script>

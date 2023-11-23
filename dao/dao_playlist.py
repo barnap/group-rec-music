@@ -114,12 +114,12 @@ def update_individual_evaluations_and_update_user(user_id, song_evals_list, atte
                                 SET self_eval = %s
                                 WHERE user_id = %s AND song_id = %s
                                 """, (song_eval, user_id, song_id))
-        cur = db.cursor()
-        cur.execute("""
-                                UPDATE playlist_evaluation 
-                                SET peer_eval = %s
-                                WHERE peer_id = %s AND song_id = %s
-                                """, (song_eval, user_id, song_id))
+        # cur = db.cursor()
+        # cur.execute("""
+        #                         UPDATE playlist_evaluation
+        #                         SET peer_eval = %s
+        #                         WHERE peer_id = %s AND song_id = %s
+        #                         """, (song_eval, user_id, song_id))
 
     cur = db.cursor()
     cur.execute("""
@@ -128,6 +128,26 @@ def update_individual_evaluations_and_update_user(user_id, song_evals_list, atte
                 attention_individual = %s
                 WHERE id = %s
                 """, (next_state, attention_passed, user_id))
+
+    db.commit()
+    print('Executed the query')
+    db.close()
+    print('Closed the dao!')
+    return None
+
+
+
+def update_peer_evaluation(user_id, peer_id, song_id, peer_eval):
+    db = db_utils.create_connection_db()
+
+
+
+    cur = db.cursor()
+    cur.execute("""
+                            UPDATE playlist_evaluation 
+                            SET peer_eval = %s
+                            WHERE user_id = %s AND song_id = %s AND peer_id = %s
+                            """, (peer_eval, user_id, song_id, peer_id))
 
     db.commit()
     print('Executed the query')
@@ -259,3 +279,129 @@ def load_songs_for_user_for_group_eval(user_id, playlist_type):
 
     print(songs)
     return songs
+
+
+def load_playlists_table():
+    db = db_utils.create_connection_db()
+    cur = db.cursor()
+    cur.execute("""
+            select 
+                song_id,
+                user_id,
+                relationship,
+                self_eval,
+                peer_eval,
+                group_self_eval,
+                is_original,
+                peer_id
+            from playlist_evaluation
+            """)
+
+    results = cur.fetchall()
+    print('Executed the query')
+
+    db.close()
+
+    playlist_eval_list = list()
+    for result in results:
+        eval_dict = dict()
+        print(result[0])
+
+        eval_dict["song_id"] = result[0]
+        eval_dict["user_id"] = result[1]
+        eval_dict["relationship"] = result[2]
+        eval_dict["self_eval"] = result[3]
+        eval_dict["peer_eval"] = result[4]
+        eval_dict["group_self_eval"] = result[5]
+        eval_dict["is_original"] = result[6]
+        eval_dict["peer_id"] = result[7]
+
+        playlist_eval_list.append(eval_dict)
+
+    return playlist_eval_list
+
+
+def load_playlists_table_as_json():
+    db = db_utils.create_connection_db()
+    cur = db.cursor()
+    cur.execute("""
+            select 
+                song_id,
+                user_id,
+                relationship,
+                self_eval,
+                peer_eval,
+                group_self_eval,
+                is_original,
+                peer_id
+            from playlist_evaluation
+            """)
+
+    results = cur.fetchall()
+    print('Executed the query')
+
+    db.close()
+
+    playlist_eval_list = list()
+    for result in results:
+        eval_dict = dict()
+        print(result[0])
+
+        eval_dict["song_id"] = result[0]
+        eval_dict["user_id"] = result[1]
+        eval_dict["relationship"] = result[2]
+        eval_dict["self_eval"] = result[3]
+        eval_dict["peer_eval"] = result[4]
+        eval_dict["group_self_eval"] = result[5]
+        eval_dict["is_original"] = result[6]
+        eval_dict["peer_id"] = result[7]
+
+        playlist_eval_list.append(eval_dict)
+
+    return json.dumps(playlist_eval_list, indent=2)
+
+
+def load_songs_self_eval():
+    db = db_utils.create_connection_db()
+    cur = db.cursor()
+
+    cur.execute("""
+                                    SELECT self_eval
+                                    FROM playlist_evaluation
+                                    WHERE relationship = 'friend' and is_original = 'true'
+                                    """)
+
+    results = cur.fetchall()
+    print('Executed the query')
+    print(len(results))
+    db.close()
+
+    songs_eval = list()
+    for res in results:
+        if res[0] == None:
+            songs_eval.append(-1)
+        else:
+            songs_eval.append(int(res[0]))
+
+    db = db_utils.create_connection_db()
+    cur = db.cursor()
+
+    cur.execute("""
+                                        SELECT self_eval
+                                        FROM playlist_evaluation
+                                        WHERE is_original = 'false'
+                                        """)
+
+    results = cur.fetchall()
+    print('Executed the query')
+    print(len(results))
+    db.close()
+
+    for res in results:
+        if res[0] == None:
+            songs_eval.append(-1)
+        else:
+            songs_eval.append(int(res[0]))
+
+    print(songs_eval)
+    return songs_eval
