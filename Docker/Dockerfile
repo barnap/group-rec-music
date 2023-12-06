@@ -5,6 +5,6 @@ WORKDIR /app
 RUN git clone https://github.com/barnap/group-rec-music.git
 WORKDIR /app/group-rec-music
 RUN pip install --no-cache-dir -r requirements.txt
-CMD python -m dao.db_initialization
-CMD python -m webapp.main
+# CMD python -m dao.db_initialization
+# CMD python -m webapp.main
 EXPOSE 5000

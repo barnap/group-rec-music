@@ -2,7 +2,7 @@ version: '2.1'
 services:
   postgres:
     restart: always
-    image: postgres
+    image: postgres:15
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -10,7 +10,7 @@ services:
     volumes:
       - ./postgres-data/postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
   app:
     restart: always
     image: app
@@ -39,7 +39,7 @@ services:
       - TRACK_TO_SELECT=${TRACK_TO_SELECT}
     build: .
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       - .:/app
     depends_on:
