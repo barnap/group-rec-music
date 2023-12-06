@@ -39,12 +39,12 @@ def manage_logged_user(current_user_id, invited, sp=None):
         #TODO: CREATE TRANSACTION ? IF THE USER IS CREATED AND THE SONGS ARE NOT INITIALIZED?
 
         # select the tracks for the user
+        if not is_admin:
+            user_track_ids = helper.get_selected_tracks(sp)
 
-        user_track_ids = helper.get_selected_tracks(sp)
+            print("selected tracks: ", len(user_track_ids))
 
-        print("selected tracks: ", len(user_track_ids))
-
-        dao_playlist.create_basic_playlists_for_user(current_user_id, user_track_ids)
+            dao_playlist.create_basic_playlists_for_user(current_user_id, user_track_ids)
 
         user = dao_user.load_user_data(current_user_id)
 
@@ -105,6 +105,7 @@ def __perform_submit(current_state, user, invited, form, mail):
     if missing_parameters:
         error_msg = __create_missing_parameters_msg(missing_parameters)
 
+    # TODO: in each state we prepare the session for the next at the end; this is not very "generic" and needs to be reengineered
     if current_state == 'INSERT_EMAIL_NICK':
         current_state, error_msg, email_friend = __manage_insert_nick_email(current_state, current_user_id, form, invited)
         add_to_session['email_friend'] = email_friend
@@ -118,7 +119,11 @@ def __perform_submit(current_state, user, invited, form, mail):
         add_to_session['ROCI'] = generate_roci_dict(current_user_id)
     elif current_state == 'INSERT_SELF_ROCI':
         current_state, error_msg = __manage_insert_roci(current_state, current_user_id, form, invited)
-        add_to_session['ROCI'] = generate_roci_dict(current_user_id)
+        add_to_session['INDIVIDUAL_SONGS'] = generate_individual_songs_dict(current_user_id)
+    elif current_state == 'EVALUATE_SONGS_INDIVIDUAL':
+        current_state, error_msg = __manage_insert_individual_evaluations(current_state, current_user_id, form, invited)
+
+    # SESSION 2
     elif current_state == 'START_SESSION_2':
         current_state, error_msg = __manage_start_session_two(current_state, current_user_id, form, invited)
         add_to_session['FFM'] = generate_ffm_dict(current_user_id)
@@ -127,11 +132,8 @@ def __perform_submit(current_state, user, invited, form, mail):
         add_to_session['ROCI'] = generate_roci_dict(current_user_id)
     elif current_state == 'INSERT_FRIEND_ROCI':
         current_state, error_msg = __manage_insert_roci(current_state, current_user_id, form, invited)
-        add_to_session['INDIVIDUAL_SONGS'] = generate_individual_songs_dict(current_user_id)
-    elif current_state == 'EVALUATE_SONGS_INDIVIDUAL':
-        current_state, error_msg = __manage_insert_individual_evaluations(current_state, current_user_id, form, invited)
-    elif current_state == 'START_SESSION_3':
-        current_state, error_msg = __manage_start_session_three(current_state, current_user_id, form, invited)
+    # elif current_state == 'START_SESSION_3':
+    #     current_state, error_msg = __manage_start_session_three(current_state, current_user_id, form, invited)
         add_to_session['GROUP_SONGS'] = generate_group_songs_dict(current_user_id, "friend")
     elif current_state == 'EVALUATE_SONGS_GROUP_FRIEND':
         current_state, error_msg = __manage_insert_group_eval(current_state, current_user_id, form, invited, "friend")
@@ -173,8 +175,9 @@ def __manage_insert_nick_email_friend(current_state, current_user_id, current_us
     error_msg = None
     friend_nickname = form.get('friend_nickname')
     friend_email = form.get('friend_email')
+    friend_pronoun = form.get('friend_pronoun')
 
-    print(friend_email, friend_nickname)
+    print(friend_email, friend_nickname, friend_pronoun)
 
     if not invited:
         # TODO: Send the invitation!!!
@@ -183,7 +186,7 @@ def __manage_insert_nick_email_friend(current_state, current_user_id, current_us
 
     # find new state to update it
     next_state = __find_next_state(current_state)
-    dao_user.update_friend_email_nick(current_user_id, friend_email, friend_nickname, next_state)
+    dao_user.update_friend_info(current_user_id, friend_email, friend_nickname, friend_pronoun, next_state)
 
     user = dao_user.load_user_data(current_user_id)
     current_state = user['current_state']
@@ -196,12 +199,13 @@ def __manage_insert_age_gender(current_state, current_user_id, form, invited):
     error_msg = None
     age = form.get('age')
     gender = form.get('gender')
+    pronoun = form.get('pronoun')
 
     print(age, gender)
 
     # find new state to update it
     next_state = __find_next_state(current_state)
-    dao_user.update_age_gender(current_user_id, age, gender, next_state)
+    dao_user.update_demographics(current_user_id, age, gender, pronoun, next_state)
 
     user = dao_user.load_user_data(current_user_id)
     current_state = user['current_state']
@@ -338,7 +342,7 @@ def __manage_insert_group_eval(current_state, current_user_id, form, invited, re
 
     error_message = None
     song_evals_list = list()
-    for i in range(config.config.TRACK_NUMBER):
+    for i in range(config.TRACK_NUMBER):
         song_evals_dict = dict()
         print("SONG_" + str(i))
         print(form.get("SONG_" + str(i)))
@@ -393,11 +397,22 @@ def __retrieve_required_parameters_values(params, required_parameters):
 
 
 def __find_next_state(current_state):
+    print("===== FIND NEXT STATE =====")
     current_session = db_utils.get_current_session()
-    next_state_index = config.STATUSES[current_session].index(current_state) + 1
+    current_state_index = config.STATUSES[current_session].index(current_state)
+    next_state_index = current_state_index + 1
+
+    print("current state: ", current_state)
+    print("current state index: ", current_state_index)
+
     if next_state_index >= len(config.STATUSES[current_session]):
         next_state_index = len(config.STATUSES[current_session])
-    return config.STATUSES[current_session][next_state_index]
+
+    next_state = config.STATUSES[current_session][next_state_index]
+    print("next state: ", next_state)
+    print("next state index: ", next_state_index)
+    print("============================")
+    return next_state
 
 
 def __create_missing_parameters_msg(missing_parameters):
@@ -407,26 +422,56 @@ def __create_missing_parameters_msg(missing_parameters):
         return "Please insert all the required information"
 
 
+def __create_string_for_preferred_pronouns(user, current_session, string, relationship=None):
+    if current_session == 1:
+        nickname = user['nickname']
+        pronoun_key = int(user['pronoun'])
+    else:
+        nickname = user['friend_nickname']
+        pronoun_key = int(user['friend_pronoun'])
+
+    nickname_peer = ""
+    if relationship:
+        if relationship == 'friend':
+            nickname_peer = user['friend_nickname']
+        else:
+            nickname_peer = user['stranger_nickname']
+
+    print(nickname, nickname_peer, pronoun_key)
+    string = string.replace("<Nickname>", nickname.capitalize())\
+        .replace("<Nickname_peer>", nickname_peer.capitalize())\
+        .replace("<Subject>", config.PRONOUNS[pronoun_key]['SUBJECT'].capitalize())\
+        .replace("<subject>", config.PRONOUNS[pronoun_key]['SUBJECT'])\
+        .replace("<object>", config.PRONOUNS[pronoun_key]['OBJECT'])\
+        .replace("<possessive>", config.PRONOUNS[pronoun_key]['POSSESSIVE'])\
+        .replace("<reflexive>", config.PRONOUNS[pronoun_key]['REFLEXIVE'])\
+        .replace("<to_be_con>", config.PRONOUNS[pronoun_key]['TO_BE_CON'])\
+        .replace("<to_have_con>", config.PRONOUNS[pronoun_key]['TO_HAVE_CON'])\
+        .replace("<to_carry_con>", config.PRONOUNS[pronoun_key]['TO_CARRY_CON'])\
+        .replace("<to_worry_con>", config.PRONOUNS[pronoun_key]['TO_WORRY_CON'])\
+        .replace("<to_try_con>", config.PRONOUNS[pronoun_key]['TO_TRY_CON'])\
+        .replace("<verb_con>", config.PRONOUNS[pronoun_key]['VERB_CON'])\
+        .replace("<irr_verb_con>", config.PRONOUNS[pronoun_key]['IRR_VERB_CON'])
+
+    return string
+
+
 def generate_ffm_dict(user_id):
     user = dao_user.load_user_data(user_id)
     current_session = db_utils.get_current_session()
-    if current_session == 1:
-        nickname = user['nickname']
-    else:
-        nickname = user['friend_nickname']
-    nickname = nickname.title()
+
     ffm_dict = dict()
-    ffm_dict['instruction'] = config.FFM_INSTRUCTION[current_session].replace("<Nickname>", nickname)
-    ffm_dict['instruction_short'] = config.FFM_INSTRUCTION_SHORT[current_session].replace("<Nickname>", nickname)
-    ffm_dict['title'] = config.FFM_TITLE[current_session].replace("<Nickname>", nickname)
+    ffm_dict['instruction'] = __create_string_for_preferred_pronouns(user, current_session, config.FFM_INSTRUCTION[current_session])
+    ffm_dict['instruction_short'] = __create_string_for_preferred_pronouns(user, current_session, config.FFM_INSTRUCTION_SHORT[current_session])
+    ffm_dict['title'] = __create_string_for_preferred_pronouns(user, current_session, config.FFM_TITLE[current_session])
     ffm_dict['questionnaire'] = list()
     indexes = [i for i in range(len(config.FFM_STORIES))]
     random.shuffle(indexes)
     for i in range(len(config.FFM_STORIES)):
         trait_story = config.FFM_STORIES[indexes[i]]
         input_id = trait_story['INPUT_ID']
-        low_story = trait_story['LOW_STORY'].replace("<Nickname>", nickname)
-        high_story = trait_story['HIGH_STORY'].replace("<Nickname>", nickname)
+        low_story = __create_string_for_preferred_pronouns(user, current_session, trait_story['LOW_STORY'])
+        high_story = __create_string_for_preferred_pronouns(user, current_session, trait_story['HIGH_STORY'])
         swap_stories = bool(random.getrandbits(1))
         ffm_dict['questionnaire'].append(
             {
@@ -442,15 +487,11 @@ def generate_ffm_dict(user_id):
 def generate_roci_dict(user_id):
     user = dao_user.load_user_data(user_id)
     current_session = db_utils.get_current_session()
-    if current_session == 1:
-        nickname = user['nickname']
-    else:
-        nickname = user['friend_nickname']
-    nickname = nickname.title()
+
     roci_dict = dict()
-    roci_dict['instruction'] = config.ROCI_INSTRUCTIONS[current_session].replace("<Nickname>", nickname)
-    roci_dict['instruction_short'] = config.ROCI_INSTRUCTIONS_SHORT[current_session].replace("<Nickname>", nickname)
-    roci_dict['title'] = config.ROCI_TITLE[current_session].replace("<Nickname>", nickname)
+    roci_dict['instruction'] = __create_string_for_preferred_pronouns(user, current_session, config.ROCI_INSTRUCTIONS[current_session])
+    roci_dict['instruction_short'] = __create_string_for_preferred_pronouns(user, current_session, config.ROCI_INSTRUCTIONS_SHORT[current_session])
+    roci_dict['title'] = __create_string_for_preferred_pronouns(user, current_session, config.ROCI_TITLE[current_session])
     roci_dict['questionnaire'] = list()
 
     if current_session == 1:
@@ -467,7 +508,7 @@ def generate_roci_dict(user_id):
         question = questionnaire[i]
         input_id = i
         print(i, question)
-        question_text = question.replace("<Nickname>", nickname)
+        question_text = __create_string_for_preferred_pronouns(user, current_session, question)
         roci_dict['questionnaire'].append(
             {
                 'INPUT_ID': input_id,
@@ -479,18 +520,17 @@ def generate_roci_dict(user_id):
 
 def generate_individual_songs_dict(user_id):
     user = dao_user.load_user_data(user_id)
-    nickname = user['nickname']
+    current_session = db_utils.get_current_session()
 
-    nickname = nickname.title()
     individual_songs_dict = dict()
-    individual_songs_dict['instruction'] = config.IND_EVAL_INSTRUCTIONS.replace("<Nickname>", nickname)
-    individual_songs_dict['instruction_short'] = config.IND_EVAL_INSTRUCTIONS_SHORT.replace("<Nickname>",nickname)
-    individual_songs_dict['title'] = config.IND_EVAL_TITLE.replace("<Nickname>", nickname)
+    individual_songs_dict['instruction'] = __create_string_for_preferred_pronouns(user, current_session, config.IND_EVAL_INSTRUCTIONS)
+    individual_songs_dict['instruction_short'] = __create_string_for_preferred_pronouns(user, current_session, config.IND_EVAL_INSTRUCTIONS_SHORT)
+    individual_songs_dict['title'] = __create_string_for_preferred_pronouns(user, current_session, config.IND_EVAL_TITLE)
     individual_song_id_list = dao_playlist.load_songs_for_user(user_id)
     individual_song_list = list()
-    attention_index = random.randint(0, 3 * config.TRACK_TO_SELECT)
+    attention_index = random.randint(0, config.TRACK_NUMBER)
     print(attention_index)
-    for index, song_id in zip(range(3*config.TRACK_TO_SELECT), individual_song_id_list):
+    for index, song_id in zip(range(config.TRACK_NUMBER), individual_song_id_list):
         print(index)
         song = dict()
         song['attention'] = False
@@ -501,7 +541,7 @@ def generate_individual_songs_dict(user_id):
         if index == attention_index:
             song = dict()
             song['attention'] = True
-            song['SONG_INDEX'] = 3*config.TRACK_TO_SELECT
+            song['SONG_INDEX'] = config.TRACK_NUMBER
             song['SONG_ID'] = 'attention'
             song['SONG_URL'] = 'no_url'
             individual_song_list.append(song)
@@ -513,29 +553,22 @@ def generate_individual_songs_dict(user_id):
 
 def generate_group_songs_dict(user_id, relationship):
     user = dao_user.load_user_data(user_id)
-    nickname = user['nickname']
-    if relationship == 'friend':
-        nickname_peer = user['friend_nickname']
-    else:
-        nickname_peer = user['stranger_nickname']
+    current_session = db_utils.get_current_session()
 
-    nickname = nickname.title()
-    nickname_peer = nickname_peer.title()
     group_songs_dict = dict()
-    group_songs_dict['instruction'] = config.GROUP_EVAL_INSTRUCTIONS[relationship].replace("<Nickname>", nickname_peer)
-    group_songs_dict['instruction_short'] = config.GROUP_EVAL_INSTRUCTIONS_SHORT[relationship].replace("<Nickname>", nickname_peer)
-    group_songs_dict['title'] = config.GROUP_EVAL_TITLE[relationship].replace("<Nickname>", nickname_peer)
-    group_songs_dict['self_eval_message'] = config.GROUP_SELF_EVAL_MSG.replace("<Nickname>", nickname_peer)
-    group_songs_dict['peer_eval_message'] = config.GROUP_PEER_EVAL_MSG.replace("<Nickname>", nickname_peer)
-
+    group_songs_dict['instruction'] = __create_string_for_preferred_pronouns(user, current_session, config.GROUP_EVAL_INSTRUCTIONS[relationship], relationship)
+    group_songs_dict['instruction_short'] = __create_string_for_preferred_pronouns(user, current_session, config.GROUP_EVAL_INSTRUCTIONS_SHORT[relationship], relationship)
+    group_songs_dict['title'] = __create_string_for_preferred_pronouns(user, current_session, config.GROUP_EVAL_TITLE[relationship], relationship)
+    group_songs_dict['self_eval_message'] = __create_string_for_preferred_pronouns(user, current_session, config.GROUP_SELF_EVAL_MSG, relationship)
+    group_songs_dict['peer_eval_message'] = __create_string_for_preferred_pronouns(user, current_session, config.GROUP_PEER_EVAL_MSG, relationship)
 
     group_song_id_list = dao_playlist.load_songs_for_user_for_group_eval(user_id, relationship)
     group_song_list = list()
 
-    attention_index = random.randint(0, 2 * config.TRACK_TO_SELECT)
+    attention_index = random.randint(0, config.TRACK_NUMBER)
     print("ATTENTION", attention_index)
 
-    for index, song_to_eval in zip(range(2 * config.TRACK_TO_SELECT), group_song_id_list):
+    for index, song_to_eval in zip(range(config.TRACK_NUMBER), group_song_id_list):
         print(index)
         song = dict()
         song['SONG_INDEX'] = index
@@ -547,11 +580,11 @@ def generate_group_songs_dict(user_id, relationship):
         if index == attention_index:
             song = dict()
             song['attention'] = True
-            song['SONG_INDEX'] = 2*config.TRACK_TO_SELECT
+            song['SONG_INDEX'] = config.TRACK_NUMBER
             song['SONG_ID'] = 'attention'
             song['SONG_URL'] = 'no_url'
-            song['SELF_EVAL'] = 50
-            song['PEER_EVAL'] = 50
+            song['SELF_EVAL'] = 100
+            song['PEER_EVAL'] = 100
             group_song_list.append(song)
     print("songs", len(group_song_list))
     group_songs_dict['individual_song_list'] = group_song_list
@@ -854,9 +887,12 @@ def __generate_bins_trait(personality_trait_values, n_bins, min, max):
 
     #SELF
     for val in personality_trait_values['SELF']:
-        norm_val = n_bins * ((val-min)/(max-min))
-        print(val, norm_val)
-        bins[floor(norm_val)] = bins[floor(norm_val)] + 1
+        if val == max:
+            bins[n_bins-1] = bins[n_bins-1] + 1
+        else:
+            norm_val = n_bins * ((val-min)/(max-min))
+            print(val, norm_val)
+            bins[floor(norm_val)] = bins[floor(norm_val)] + 1
 
     returned_bins['SELF'] = bins
 
@@ -895,6 +931,9 @@ def get_session_url():
         return 'session_three'
     else:
         return 'session_close'
+
+def get_admin_url():
+    return 'admin'
 
 
 def is_current_session(session_number):

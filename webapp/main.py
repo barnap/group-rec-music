@@ -172,7 +172,7 @@ def callback():
     # session['current_user'] = user
 
     if user["is_admin"]:
-        return render_template(next_view)
+        return redirect(url_for(ctrl.get_admin_url())) # TODO: Fix this redirect
 
     return redirect(url_for(ctrl.get_session_url()))
 
@@ -343,7 +343,7 @@ def start_session_two():
 
 
 @app.route('/admin', methods=['GET', 'POST'])
-def admin_routes():
+def admin():
     print(">>>>> ADMIN")
     if "current_user" not in session:
         return render_template('login.html')

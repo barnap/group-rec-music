@@ -66,24 +66,35 @@
 
     <!-- Age -->
     <select class="browser-default custom-select" id="age" name="age" required>
-        <option selected disabled>What is your age?</option>
+        <option value="">What is your age?</option>
         <option value="1"><18</option>
         <option value="2">18-25</option>
         <option value="3">26-35</option>
         <option value="4">36-45</option>
         <option value="5">46-55</option>
         <option value="6">>55</option>
+        <option value="7">Prefer not to share this information</option>
     </select>
     <br><br>
     <!-- GENDER -->
     <select class="browser-default custom-select" id="gender" name="gender" required>
-        <option selected disabled>What is your gender?</option>
+        <option value="">What is your gender?</option>
         <option value="1">Female</option>
         <option value="2">Male</option>
-        <option value="3">Other</option>
-        <option value="4">Prefer not to comment!</option>
+        <option value="3">Nonbinary</option>
+        <option value="4">A gender not listed here</option>
+        <option value="5">Prefer not to share this information</option>
     </select>
     <br><br>
+    <!-- PRONOUNS -->
+    <select class="browser-default custom-select" id="pronoun" name="pronoun" required>
+        <option value="">Which set of pronouns you prefer to be used to refer to you?</option>
+        <option value="1">he, him, his</option>
+        <option value="2">she, her, hers</option>
+        <option value="3">they, them, theirs</option>
+    </select>
+    <br><br>
+
     <button id="s1_submit" name="s1_submit" value="s1_submit"
             class="btn btn-info btn-block" type="submit" >Submit</button>
 

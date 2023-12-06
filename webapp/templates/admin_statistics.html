@@ -51,6 +51,13 @@
           <canvas id="FFM_OPE" style="width:100%;max-width:400px"></canvas>
           <canvas id="FFM_EMO" style="width:100%;max-width:400px"></canvas>
 
+          <canvas id="ROCI_INT" style="width:100%;max-width:400px"></canvas>
+          <canvas id="ROCI_OBL" style="width:100%;max-width:400px"></canvas>
+          <canvas id="ROCI_DOM" style="width:100%;max-width:400px"></canvas>
+          <canvas id="ROCI_AVO" style="width:100%;max-width:400px"></canvas>
+          <canvas id="ROCI_COM" style="width:100%;max-width:400px"></canvas>
+
+
 
 
       </div>
@@ -182,6 +189,113 @@ new Chart("FFM_EMO", {
     title: {
       display: true,
       text: "Emotional Stability"
+    }
+  }
+});
+
+
+
+new Chart("ROCI_INT", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['ROCI_INT']['SELF'][0]}},{{session['ROCI_INT']['SELF'][1]}},{{session['ROCI_INT']['SELF'][2]}},{{session['ROCI_INT']['SELF'][3]}},{{session['ROCI_INT']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['ROCI_INT']['PEER'][0]}},{{session['ROCI_INT']['PEER'][1]}},{{session['ROCI_INT']['PEER'][2]}},{{session['ROCI_INT']['PEER'][3]}},{{session['ROCI_INT']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Integrating"
+    }
+  }
+});
+
+new Chart("ROCI_OBL", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['ROCI_OBL']['SELF'][0]}},{{session['ROCI_OBL']['SELF'][1]}},{{session['ROCI_OBL']['SELF'][2]}},{{session['ROCI_OBL']['SELF'][3]}},{{session['ROCI_OBL']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['ROCI_OBL']['PEER'][0]}},{{session['ROCI_OBL']['PEER'][1]}},{{session['ROCI_OBL']['PEER'][2]}},{{session['ROCI_OBL']['PEER'][3]}},{{session['ROCI_OBL']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Obliging"
+    }
+  }
+});
+
+new Chart("ROCI_DOM", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['ROCI_DOM']['SELF'][0]}},{{session['ROCI_DOM']['SELF'][1]}},{{session['ROCI_DOM']['SELF'][2]}},{{session['ROCI_DOM']['SELF'][3]}},{{session['ROCI_DOM']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['ROCI_DOM']['PEER'][0]}},{{session['ROCI_DOM']['PEER'][1]}},{{session['ROCI_DOM']['PEER'][2]}},{{session['ROCI_DOM']['PEER'][3]}},{{session['ROCI_DOM']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Dominating"
+    }
+  }
+});
+
+new Chart("ROCI_COM", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['ROCI_COM']['SELF'][0]}},{{session['ROCI_COM']['SELF'][1]}},{{session['ROCI_COM']['SELF'][2]}},{{session['ROCI_COM']['SELF'][3]}},{{session['ROCI_COM']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['ROCI_COM']['PEER'][0]}},{{session['ROCI_COM']['PEER'][1]}},{{session['ROCI_COM']['PEER'][2]}},{{session['ROCI_COM']['PEER'][3]}},{{session['ROCI_COM']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Compromising"
+    }
+  }
+});
+
+new Chart("ROCI_AVO", {
+  type: "bar",
+  data: {
+    labels: ['','','','',''],
+    datasets: [{
+      backgroundColor: "blue",
+      data: [{{session['ROCI_AVO']['SELF'][0]}},{{session['ROCI_AVO']['SELF'][1]}},{{session['ROCI_AVO']['SELF'][2]}},{{session['ROCI_AVO']['SELF'][3]}},{{session['ROCI_AVO']['SELF'][4]}}]
+    },{
+      backgroundColor: "red",
+      data: [{{session['ROCI_AVO']['PEER'][0]}},{{session['ROCI_AVO']['PEER'][1]}},{{session['ROCI_AVO']['PEER'][2]}},{{session['ROCI_AVO']['PEER'][3]}},{{session['ROCI_AVO']['PEER'][4]}}]
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Avoiding"
     }
   }
 });

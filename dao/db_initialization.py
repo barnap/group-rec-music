@@ -55,15 +55,18 @@ def create_database():
 def create_user_table():
     create_user_table_query = '''CREATE TABLE IF NOT EXISTS public.user_app
         (
-        age_group text COLLATE pg_catalog."default",
+        id text COLLATE pg_catalog."default" NOT NULL,
+        nickname text COLLATE pg_catalog."default",
         email text COLLATE pg_catalog."default",
         friend_id text COLLATE pg_catalog."default",
         friend_nickname text COLLATE pg_catalog."default",
-        gender text COLLATE pg_catalog."default",
-        nickname text COLLATE pg_catalog."default",
-        spotify_url text COLLATE pg_catalog."default",
         stranger_id text COLLATE pg_catalog."default",
         stranger_nickname text COLLATE pg_catalog."default",
+        gender text COLLATE pg_catalog."default",
+        pronoun text COLLATE pg_catalog."default",
+        age_group text COLLATE pg_catalog."default",
+        friend_pronoun text COLLATE pg_catalog."default",
+        spotify_url text COLLATE pg_catalog."default",
         agreableness_self_eval double precision,
         conscentiousness_self_eval double precision,
         extraversion_self_eval double precision,
@@ -74,7 +77,6 @@ def create_user_table():
         extraversion_friend_eval double precision,
         emotional_stability_friend_eval double precision,
         openess_friend_eval double precision,
-        id text COLLATE pg_catalog."default" NOT NULL,
         integrating_self_eval double precision,
         obliging_self_eval double precision,
         dominating_self_eval double precision,
@@ -168,7 +170,6 @@ def create_session_info_table():
 
 
 if __name__ == '__main__':
-    # drop_database()
     # print(dao_user.get_user_email_list())
     # user_email_list = dao_user.get_user_email_list()
     # for email in user_email_list:

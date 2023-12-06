@@ -20,7 +20,7 @@ def load_user_data(user_id):
     db = db_utils.create_connection_db()
     cur = db.cursor()
     cur.execute("""
-        select id,email,nickname,friend_id,friend_nickname,stranger_id,stranger_nickname,current_state,is_invited,is_user,is_admin
+        select id,email,nickname,friend_id,friend_nickname,stranger_id,stranger_nickname,current_state,is_invited,is_user,is_admin,pronoun,friend_pronoun
         from user_app
         where id = (%s)
         """, (user_id, ))
@@ -44,6 +44,8 @@ def load_user_data(user_id):
         user_dict["is_invited"] = result[8]
         user_dict["is_user"] = result[9]
         user_dict["is_admin"] = result[10]
+        user_dict["pronoun"] = result[11]
+        user_dict["friend_pronoun"] = result[12]
 
     print(user_dict)
     return user_dict
@@ -97,14 +99,14 @@ def check_user_invited(email):
     return None, None
 
 
-def update_friend_email_nick(user_id, friend_email, friend_nickname, next_state):
+def update_friend_info(user_id, friend_email, friend_nickname, friend_pronoun, next_state):
     db = db_utils.create_connection_db()
     cur = db.cursor()
     cur.execute("""
             UPDATE user_app 
-            SET friend_email = %s, friend_nickname = %s, current_state = %s
+            SET friend_email = %s, friend_nickname = %s, friend_pronoun = %s, current_state = %s
             WHERE id = %s
-            """, (friend_email, friend_nickname.title(), next_state, user_id))
+            """, (friend_email, friend_nickname.title(), friend_pronoun, next_state, user_id))
     db.commit()
     print('Executed the query')
     db.close()
@@ -112,14 +114,14 @@ def update_friend_email_nick(user_id, friend_email, friend_nickname, next_state)
     return cur
 
 
-def update_age_gender(user_id, age, gender, next_state):
+def update_demographics(user_id, age, gender, pronoun, next_state):
     db = db_utils.create_connection_db()
     cur = db.cursor()
     cur.execute("""
                 UPDATE user_app 
-                SET age_group = %s, gender = %s, current_state = %s
+                SET age_group = %s, gender = %s, pronoun = %s, current_state = %s
                 WHERE id = %s
-                """, (age, gender, next_state, user_id))
+                """, (age, gender, pronoun, next_state, user_id))
     db.commit()
     print('Executed the query')
     db.close()
@@ -512,7 +514,9 @@ def load_users_table_as_json():
             attention_roci_peer,
             attention_individual,
             attention_group_friend,
-            attention_group_stranger
+            attention_group_stranger,
+            pronoun,
+            friend_pronoun
             from user_app
             where is_admin = false
             """)
@@ -569,6 +573,8 @@ def load_users_table_as_json():
         user_dict["attention_individual"] = result[39]
         user_dict["attention_group_friend"] = result[40]
         user_dict["attention_group_stranger"] = result[41]
+        user_dict["pronoun"] = result[42]
+        user_dict["friend_pronoun"] = result[43]
 
         users_list.append(user_dict)
 

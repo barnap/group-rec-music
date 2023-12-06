@@ -35,34 +35,50 @@
       <div class="container">
         <h1 class="masthead-heading mb-0">Music Group Recommendations</h1>
           <h5>
-              The purpose of this study is to analyze the satisfaction related on listening to different songs in different contexts, alone or in a group. Nava Tintarev (Full Professor at Maastricht University, DKE) and Francesco Barile (Post-doc Researcher at Maastricht University, DKE) are conducting this evaluation.
+              The purpose of this study is to analyze the satisfaction related on listening to different songs in
+              different contexts, alone or in a group. Nava Tintarev (Full Professor at Maastricht University, DACS)
+              and Francesco Barile (Assistant Professor at Maastricht University, DACS) are conducting this evaluation.
           </h5>
           <h5>
-              Your participation in this research study is voluntary. You may choose not to participate. If you decide to participate in this research survey, you may withdraw at any time. If you do not complete the survey, we will treat it as a withdrawal and your answers thus far will not be used.
+              Your participation in this research study is voluntary. You may choose not to participate.
+              If you decide to participate in this research survey, you may withdraw at any time.
+              If you do not complete the survey, we will treat it as a withdrawal and your answers thus far will not be used.
           </h5>
           <h5>
-              The procedure involves filling three online surveys in three different sessions. The first session will take approx. 20 minutes. The sessions 2 will take approx. 25 min, and the session 3 will take approx. 5 minutes, and you will receive an email notifying the start of each session.
-              You will be asked to register on our web application using your Spotify account.
+              The procedure involves filling two online surveys in two different sessions. Both the sessions will take approx. 30 minutes.
+              You will receive an email notifying the start of the session two on the email address you will indicate in the survey.
+              You will be asked to register on our web application using your Google account.
               {% if session['invited'] %}
-                You will perform the experiment together with the person who invited you (each one will carry out the experiment individually).  Such person should be somebody with whom you have a close relationship (e.g., your partner or a close friend).
+                You will perform the experiment together with the person who invited you (but each one will carry out the
+                experiment individually).
               {% else %}
-                You will be asked to indicate the email address and the nickname of a second person who can perform the experiment with you (each one will carry out the experiment individually).  Such person should be somebody with whom you have a close relationship (e.g., your partner or a close friend).
+                You will be asked to indicate the email address and the nickname of a second person who can perform the
+                experiment with you (each one will carry out the experiment individually).
               {% endif %}
+              Such person should be somebody with whom you have a close relationship (e.g., your partner or a close friend).
+              It is necessary for our purposes that both of you are available in performing the required sessions during the next weeks.
           </h5>
           <h5>
-              It is necessary for our purposes that both of you are regular users of the Spotify app. Also, both of you need to be available in performing the required sessions during the next weeks.
               You will be asked to provide personality evaluations for both you and your friend. Such evaluations will be confidential and stored anonymously.
-              You will be asked also to provide several evaluations related to songs listening in different contexts. Please note that part of such songs evaluations will be shared with your friend and with a second randomly selected participant. In this case, the participant will have no personal information to associate such evaluations to you.
+              Furthermore, you will be asked to provide several evaluations related to songs listening in different contexts.
+              Please note that part of such songs evaluations will be shared with your friend and with a second randomly selected participant.
+              In this case, the participant will have no personal information to associate such evaluations to you.
           </h5>
           <h5>
-              All data is stored in a password protected electronic format. We will not store any information that will personally identify you, including IP addresses.
+              All data is stored in a password protected electronic format. We will not store any information that will
+              personally identify you, including IP addresses.
               {% if session['invited'] %}
-                We will only use your email address for notification purposes.
+                Your email address is the only information we store in a not anonymized way. We will only use your email address for notification purposes.
               {% else %}
-                Your email address is the only information we store in a not anonymized way, and shared only with your friend to let him know who is inviting him in the study, since this is a requirement for our study. Then, we will only use your email address for notification purposes.
+                Your email address is the only information we store in a not anonymized way, and shared only with your
+                friend to let them know who is inviting them in the study, since this is a requirement for our study.
+                Then, we will only use your email address for notification purposes.
               {% endif %}
-              After the end of the third session, you will have 30 days to contact us for deleting your data; then, we will delete all the email addresses and nicknames, and all the provided data will be stored anonymously.
-              The results of this study will be used for the creation of scholarly publication. Furthermore, a public dataset will be generated and made available to the scientific community; in this case, only anonymized data will be included in such dataset.
+              After the end of the second session, you will have 30 days to contact us for deleting your data; then,
+              we will delete all the email addresses and nicknames, and all the provided data will be stored anonymously.
+              The results of this study will be used for the creation of scholarly publication.
+              Furthermore, a public dataset will be generated and made available to the scientific community;
+              in this case, only anonymized data will be included in such dataset.
           </h5>
           <h5>
               Among the participants, we will extract one winner for an Amazon voucher worth 20 euros.
@@ -75,33 +91,56 @@
               This research has been reviewed by Ethics Review Committee Inner City faculties (ERCIC).
           </h5>
           <h5>
-              ELECTRONIC CONSENT: Please select your choice below.
+              ELECTRONIC CONSENT: Please select your choices below.
           </h5>
           <h5>
               Clicking on the “agree” button below indicates that:
           </h5>
           <h5>
-              <ul style="list-style-position: inside;">
-                  <li>You have read the above information</li>
-                  <li>You voluntarily agree to participate</li>
-                  <li>You are at least 18 years of age</li>
-              </ul>
+<!--              <ul style="list-style-position: inside;">-->
+<!--                  <li>You have read the above information</li>-->
+<!--                  <li>You voluntarily agree to participate</li>-->
+<!--                  <li>You are at least 18 years of age</li>-->
+<!--              </ul>-->
+              <ul class="list-group">
+                      <li class="list-group-item-consent list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="..." id="agree_1" onclick="enableAgree();">
+                        I have read with the above information and agree
+                      </li>
+                      <li class="list-group-item-consent list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="..." id="agree_2" onclick="enableAgree();">
+                        I am at least 18 years of age
+                      </li>
+                      <li class="list-group-item-consent list-group-item">
+                        <input class="form-check-input me-1" type="checkbox" value="" aria-label="..." id="agree_3" onclick="enableAgree();">
+                        I voluntarily agree to participate
+                      </li>
+                  </ul>
           </h5>
           <h5>
               If you do not wish to participate in the research study, please decline participation by clicking on the “disagree” button.
           </h5>
           <form action="go" method="get">
               <center>
-                  <button type="submit" class="btn btn-success spotify_button" id="agree" style="">
-                      <h4><i class="fab fa-spotify"></i>Agree and Register</h4>
-                  </button>
+                    <button type="submit" class="btn-google btn btn-lg btn-block text-uppercase btn-outline" id="agree_btn" style="" disabled>
+                        <img src="https://img.icons8.com/color/16/000000/google-logo.png">
+                            <span class="buttonText">Register Using Google</span>
+        <!--                <h4><i class="fab fa-spotify"></i> Login with your Spotify Account</h4>-->
+                    </button>
+<!--                  <button type="submit" class="btn btn-success spotify_button" id="agree" style="">-->
+<!--                      <h4><i class="fab fa-spotify"></i>Agree and Register</h4>-->
+<!--                  </button>-->
               </center>
           </form>
           <form action="quit" method="get">
               <center>
-                  <button type="submit" class="btn btn-danger spotify_button" id="disagree" style="">
-                      <h4><i class="fab fa-spotify"></i>Disagree and Quit</h4>
-                  </button>
+                    <button type="submit" class="btn-danger btn btn-lg btn-block text-uppercase btn-outline" id="" style="">
+                            <span class="buttonText"> Disagree and Quit</span>
+        <!--                <h4><i class="fab fa-spotify"></i> Login with your Spotify Account</h4>-->
+                    </button>
+<!--                  <button type="submit" class="btn btn-danger spotify_button" id="disagree" style="">-->
+<!--                      <h4><i class="fab fa-spotify"></i>Disagree and Quit</h4>-->
+<!--                  </button>-->
               </center>
           </form>
 
@@ -115,6 +154,19 @@
 
   <script src="static/vendor/jquery/jquery.min.js"></script>
   <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function enableAgree() {
+        var check1 = document.getElementById("agree_1");
+        var check2 = document.getElementById("agree_2");
+        var check3 = document.getElementById("agree_3");
+        if (check1.checked == true && check2.checked == true && check3.checked == true) {
+            document.getElementById("agree_btn").disabled = false;
+        } else {
+            document.getElementById("agree_btn").disabled = true;
+        }
+    }
+</script>
 
 </body>
 
