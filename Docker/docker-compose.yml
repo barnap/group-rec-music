@@ -13,12 +13,15 @@ services:
       - "5432:5432"
   app:
     restart: always
+    image: app
     environment:
       - DB_DATABASE=${DB_DATABASE}
       - DB_HOST=${DB_HOST}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_PORT=${DB_PORT}
       - DB_USER=${DB_USER}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - HOST=${HOST}
       - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
