@@ -426,4 +426,5 @@ def admin_stats():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=ctrl.get_port(), ssl_context='adhoc')
+    app.run(host='0.0.0.0', port=ctrl.get_port())
+    # app.run(host='0.0.0.0', port=ctrl.get_port(), ssl_context='adhoc') # adhoc creates SSL certificate for HTTPS adhoc, not trusted - use only for beta test
