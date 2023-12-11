@@ -98,7 +98,7 @@ PARTICIPATION_EMAIL_TEXT = "We will conduct a user study evaluating the satisfac
                            " days to ask for deleting your data; after that, we will delete all the email addresses, and" \
                            " all the provided data will be stored anonymously. Among the participants, we will extract" \
                            " one winner for an Amazon voucher worth 20 euros.\n" \
-                           "Please use the following link to start the session 1: https://<Host>:<Port>/consent_form \n" \
+                           "Please use the following link to start the session 1: https://<Host>:5000/consent_form \n" \
                            "If you need further information or clarification, do not hesitate to write via email to:\n" \
                            "f.barile@maastrichtuniversity.nl. \n" \
                            "Thanks in advance for your kind cooperation."
@@ -116,7 +116,7 @@ INVITATION_EMAIL_TEXT = "You have been invited by your friend <EmailFriend> to p
                         " days to ask for deleting your data; after that, we will delete all the email addresses, and" \
                         " all the provided data will be stored anonymously. Among the participants, we will extract" \
                         " one winner for an Amazon voucher worth 20 euros.\n" \
-                        "Please use the following link to start the session 1: https://<Host>:<Port>/consent_form_invited \n" \
+                        "Please use the following link to start the session 1: https://<Host>:5000/consent_form_invited \n" \
                         "If you need further information or clarification, do not hesitate to write via email to:\n" \
                         "f.barile@maastrichtuniversity.nl. \n" \
                         "Thanks in advance for your kind cooperation."
@@ -129,7 +129,7 @@ NOTIFICATION_SESSION_START_EMAIL_TEXT[2] = "Thanks again for your participation 
                                           "on listening to different songs in different contexts, alone or in a group.\n" \
                                           "The experiment is composed by two sessions, and now you can start the second session. " \
                                           "It will take approximately 25 minutes. \n" \
-                                       "Please use the following link to start the session 2: https://<Host>:<Port>/session_two \n" \
+                                       "Please use the following link to start the session 2: https://<Host>:5000/session_two \n" \
                                        "If you need further information or clarification, do not hesitate to write via email to:\n" \
                                        "f.barile@maastrichtuniversity.nl. \n" \
                                        "Thanks in advance for your kind cooperation."
