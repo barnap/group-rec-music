@@ -107,8 +107,9 @@ def __perform_submit(current_state, user, invited, form, mail):
 
     # TODO: in each state we prepare the session for the next at the end; this is not very "generic" and needs to be reengineered
     if current_state == 'INSERT_EMAIL_NICK':
-        current_state, error_msg, email_friend = __manage_insert_nick_email(current_state, current_user_id, form, invited)
+        current_state, error_msg, email_friend, invited = __manage_insert_nick_email(current_state, current_user_id, form, invited)
         add_to_session['email_friend'] = email_friend
+        add_to_session['invited'] = invited
     elif current_state == 'INSERT_EMAIL_NICK_FRIEND':
         current_state, error_msg = __manage_insert_nick_email_friend(current_state, current_user_id, user['email'], form, invited, mail)
     elif current_state == 'INSERT_AGE_GENDER':
@@ -152,21 +153,27 @@ def __manage_insert_nick_email(current_state, current_user_id, form, invited):
 
     invited_by_id, invited_by_email = dao_user.check_user_invited(email)
     print(email, nickname, invited_by_id, invited_by_email)
+
     # check if the user has been invited
     if invited and not invited_by_id:
         error_msg = "Please insert the email on which you received your invitation"
     else:
+        # if invited_by_id not null the user has been invited: we set invited to true
+        if invited_by_id:
+            print("invited")
+            invited = True
+
         # find new state to update it
         if invited:
             # update ids of the friend for both the current user and the user who invited him
-            dao_user.update_id_friend(current_user_id, invited_by_id)
+            dao_user.update_info_friend(current_user_id, invited_by_id, invited_by_email, invited)
         next_state = __find_next_state(current_state)
         dao_user.update_user_email_nick(current_user_id, email, nickname, next_state)
 
         user = dao_user.load_user_data(current_user_id)
         current_state = user['current_state']
 
-    return current_state, error_msg, invited_by_email
+    return current_state, error_msg, invited_by_email, invited
 
 
 def __manage_insert_nick_email_friend(current_state, current_user_id, current_user_email, form, invited, mail):
@@ -961,3 +968,14 @@ def get_session_route(current_session):
 
 def get_port():
     return config.PORT
+
+
+def get_url_for_server_mode(url):
+    if config.SERVER_MODE:
+        return url.replace('http://', 'https://', 1)
+    else:
+        return url
+
+
+def is_server_mode():
+    return config.SERVER_MODE

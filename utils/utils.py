@@ -55,10 +55,11 @@ def send_invite_friend(friend_email, current_user_email, mail):
 
     email_address = friend_email
     email_subject = "Invitation to participate in a user study"
-    email_message = config.INVITATION_EMAIL_TEXT.replace("<EmailFriend>", current_user_email)
+    email_message = config.INVITATION_EMAIL_TEXT.replace("<EmailFriend>", current_user_email)\
+        .replace("<Host>", config.HOST).replace("<Port>", config.PORT)
 
     sender_email = config.mail_settings["MAIL_DEFAULT_SENDER"]
-    sender_password = config.mail_settings["MAIL_PASSWORD"]
+    # sender_password = config.mail_settings["MAIL_PASSWORD"]
     receiver_email = friend_email
 
     message = MIMEMultipart()
@@ -67,10 +68,13 @@ def send_invite_friend(friend_email, current_user_email, mail):
     message['Subject'] = email_subject
     message.attach(MIMEText(email_message, 'plain'))
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender_email, sender_password)
-    server.sendmail(sender_email, receiver_email, message.as_string())
+    # server = smtplib.SMTP('smtp.gmail.com', 587)
+    # server.starttls()
+    # server.login(sender_email, sender_password)
+    # server.sendmail(sender_email, receiver_email, message.as_string())
+
+    server = smtplib.SMTP('smtp.maastrichtuniversity.nl', 25)
+    server.send_message(message)
     server.quit()
 
     print('Email Sent!')
@@ -79,10 +83,11 @@ def send_invite_friend(friend_email, current_user_email, mail):
 def send_email_start_session(email_to_send, session_to_start):
     email_address = email_to_send
     email_subject = config.NOTIFICATION_SESSION_START_EMAIL_SUBJECT[session_to_start]
-    email_message = config.NOTIFICATION_SESSION_START_EMAIL_TEXT[session_to_start]
+    email_message = config.NOTIFICATION_SESSION_START_EMAIL_TEXT[session_to_start]\
+        .replace("<Host>", config.HOST).replace("<Port>", config.PORT)
 
     sender_email = config.mail_settings["MAIL_DEFAULT_SENDER"]
-    sender_password = config.mail_settings["MAIL_PASSWORD"]
+    # sender_password = config.mail_settings["MAIL_PASSWORD"]
     receiver_email = email_to_send
 
     message = MIMEMultipart()
@@ -91,10 +96,13 @@ def send_email_start_session(email_to_send, session_to_start):
     message['Subject'] = email_subject
     message.attach(MIMEText(email_message, 'plain'))
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(sender_email, sender_password)
-    server.sendmail(sender_email, receiver_email, message.as_string())
+    # server = smtplib.SMTP('smtp.gmail.com', 587)
+    # server.starttls()
+    # server.login(sender_email, sender_password)
+    # server.sendmail(sender_email, receiver_email, message.as_string())
+
+    server = smtplib.SMTP('smtp.maastrichtuniversity.nl', 25)
+    server.send_message(message)
     server.quit()
 
     print('Email Sent!')

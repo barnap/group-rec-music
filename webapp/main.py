@@ -97,13 +97,10 @@ def go():
     # scopes that let you retrieve user's profile from Google
     request_uri = client.prepare_request_uri(
         authorization_endpoint,
-        redirect_uri=request.url_root + "callback",
+        redirect_uri=ctrl.get_url_for_server_mode((request.url_root + "callback")),
         scope=["openid", "email", "profile"],
     )
     return redirect(request_uri)
-
-
-    # return response
 
 
 @app.route('/callback')
@@ -126,8 +123,8 @@ def callback():
 
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
-        authorization_response=request.url,
-        redirect_url=request.base_url,
+        authorization_response=ctrl.get_url_for_server_mode(request.url),
+        redirect_url=ctrl.get_url_for_server_mode(request.base_url),
         code=code
     )
     token_response = requests.post(
@@ -426,5 +423,7 @@ def admin_stats():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=ctrl.get_port())
-    # app.run(host='0.0.0.0', port=ctrl.get_port(), ssl_context='adhoc') # adhoc creates SSL certificate for HTTPS adhoc, not trusted - use only for beta test
+    if ctrl.is_server_mode():
+        app.run(host='0.0.0.0', port=ctrl.get_port())
+    else:
+        app.run(host='0.0.0.0', port=ctrl.get_port(), ssl_context='adhoc') # adhoc creates SSL certificate for HTTPS adhoc, not trusted - use only for beta test

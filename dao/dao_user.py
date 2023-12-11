@@ -234,14 +234,16 @@ def update_friend_roci_and_update_user(user_id, integrating, obliging, dominatin
     return cur
 
 
-def update_id_friend(user_id, invited_by_id):
+def update_info_friend(user_id, invited_by_id, invited_by_email, invited):
     db = db_utils.create_connection_db()
     cur = db.cursor()
     cur.execute("""
                         UPDATE user_app 
-                        SET friend_id = %s
+                        SET friend_id = %s,
+                        is_invited = %s,
+                        friend_email = %s
                         WHERE id = %s
-                        """, (invited_by_id, user_id))
+                        """, (invited_by_id, invited, invited_by_email, user_id))
     cur = db.cursor()
     cur.execute("""
                             UPDATE user_app 

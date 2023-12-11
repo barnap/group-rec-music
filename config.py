@@ -14,6 +14,8 @@ HOST = os.environ['HOST']
 PORT =  os.environ['PORT']
 main_page_uri = "http://"+HOST+":"+PORT
 
+SERVER_MODE = os.environ['SERVER_MODE']=='True'
+
 # Below link must be added to spotify Application callback links through developer.spotify.account
 redirect_uri = main_page_uri+"/callback"
 
@@ -44,21 +46,37 @@ mail_settings = {
 TEST_MODE = os.environ['TEST_MODE']=='True'
 TRACK_TO_SELECT = int(os.environ['TRACK_TO_SELECT'])
 
-FIX_TRACK_ID_LIST = ['3k79jB4aGmMDUQzEwa46Rz',
- '1BxfuPKGuaTgP7aM0Bbdwr',
- '3qQbCzHBycnDpGskqOWY0E',
- '7ro0hRteUMfnOioTFI5TG1',
- '4DHcnVTT87F0zZhRPYmZ3B',
- '2UW7JaomAMuX9pZrjVpHAU',
- '6pD0ufEQq0xdHSsRbg9LBK',
- '1odExI7RdWc4BT515LTAwj',
- '4Dvkj6JhhA12EX05fT7y2e',
- '1Qrg8KqiBpW07V7PNxwwwL',
- '7FbrGaHYVDmfr7KoLIZnQ7',
- '4eMKD8MRroxCqugpsxCCNb',
- '7mXuWTczZNxG5EDcjFEuJR',
- '2FDTHlrBguDzQkp7PVj16Q',
- '7ABLbnD53cQK00mhcaOUVG']
+# FIX_TRACK_ID_LIST = ['3k79jB4aGmMDUQzEwa46Rz',
+# '1BxfuPKGuaTgP7aM0Bbdwr',
+# '3qQbCzHBycnDpGskqOWY0E',
+# '7ro0hRteUMfnOioTFI5TG1',
+# '4DHcnVTT87F0zZhRPYmZ3B',
+# '2UW7JaomAMuX9pZrjVpHAU',
+# '6pD0ufEQq0xdHSsRbg9LBK',
+# '1odExI7RdWc4BT515LTAwj',
+# '4Dvkj6JhhA12EX05fT7y2e',
+# '1Qrg8KqiBpW07V7PNxwwwL',
+# '7FbrGaHYVDmfr7KoLIZnQ7',
+# '4eMKD8MRroxCqugpsxCCNb',
+# '7mXuWTczZNxG5EDcjFEuJR',
+# '2FDTHlrBguDzQkp7PVj16Q',
+# '7ABLbnD53cQK00mhcaOUVG']
+
+FIX_TRACK_ID_LIST = ['6EuRU9AoOj1xgVme6YNBv8',
+                     '3rm2WrETcJxFjOawcfiG3h',
+                     '2SW0q2M7fYw27ZZmxGGToo',
+                     '47bUyxG4UYJG2DKLdWrz2e',
+                     '69mZE03ZRctshpkHW5Zzs3',
+                     '0DRR9F3to4Luddk7m8pXmH',
+                     '783RuwtbSBY81dJbtfaMYU',
+                     '4ogHSgRXA2dSDQua8eOJ1a',
+                     '7JiNqs52r97rOOjad76JhD',
+                     '0Xus6HrrWoNXeT8l0prJ3j',
+                     '2yqVwgPoCzIwbRjrVmfFWW',
+                     '2ViSWfhT0kvEulXA1HH7Wk',
+                     '6RBLcDQvA3VgQ8vHoXoo0v',
+                     '3198LMj0bpnXj8Mb1GLo3u',
+                     '2zLMOb6Z01X9PLxl09xJ9t']
 
 TRACK_NUMBER = len(FIX_TRACK_ID_LIST)
 ADMIN_USER_ID_LIST = (os.environ['SUPER_ADMIN'],)
@@ -69,7 +87,7 @@ PARTICIPATION_EMAIL_TEXT = "We will conduct a user study evaluating the satisfac
                            "songs in different contexts, alone or in a group. For the participation, it is necessary that " \
                            "you have a Google account.\n" \
                            "The experiment is composed by two sessions, scheduled in the next 2 weeks: Bot sessions should" \
-                            " take approximately 20 minutes. You will be" \
+                            " take approximately 30 minutes. You will be" \
                             " asked to register on our web application using your Google account and to indicate the" \
                            " email address and the nickname of a second person who can perform the experiment with you" \
                            " (each one will carry out the experiment individually). Such person should be somebody with" \
@@ -80,7 +98,7 @@ PARTICIPATION_EMAIL_TEXT = "We will conduct a user study evaluating the satisfac
                            " days to ask for deleting your data; after that, we will delete all the email addresses, and" \
                            " all the provided data will be stored anonymously. Among the participants, we will extract" \
                            " one winner for an Amazon voucher worth 20 euros.\n" \
-                           "Please use the following link to start the session 1: https://127.0.0.1:5000/consent_form \n" \
+                           "Please use the following link to start the session 1: https://<Host>:<Port>/consent_form \n" \
                            "If you need further information or clarification, do not hesitate to write via email to:\n" \
                            "f.barile@maastrichtuniversity.nl. \n" \
                            "Thanks in advance for your kind cooperation."
@@ -90,7 +108,7 @@ INVITATION_EMAIL_TEXT = "You have been invited by your friend <EmailFriend> to p
                         "songs in different contexts, alone or in a group. For the participation, it is necessary that " \
                         "you have a Google account.\n" \
                         "The experiment is composed by two sessions, scheduled in the next 2 weeks: Bot sessions should" \
-                        " take approximately 20 minutes. You will be" \
+                        " take approximately 30 minutes. You will be" \
                         " asked to register on our web application using your Google account." \
                         "We will use your email address to notify the start of the session 2," \
                         " and to provide the link for it. You will be able to" \
@@ -98,7 +116,7 @@ INVITATION_EMAIL_TEXT = "You have been invited by your friend <EmailFriend> to p
                         " days to ask for deleting your data; after that, we will delete all the email addresses, and" \
                         " all the provided data will be stored anonymously. Among the participants, we will extract" \
                         " one winner for an Amazon voucher worth 20 euros.\n" \
-                        "Please use the following link to start the session 1: https://127.0.0.1:5000/consent_form_invited \n" \
+                        "Please use the following link to start the session 1: https://<Host>:<Port>/consent_form_invited \n" \
                         "If you need further information or clarification, do not hesitate to write via email to:\n" \
                         "f.barile@maastrichtuniversity.nl. \n" \
                         "Thanks in advance for your kind cooperation."
@@ -111,7 +129,7 @@ NOTIFICATION_SESSION_START_EMAIL_TEXT[2] = "Thanks again for your participation 
                                           "on listening to different songs in different contexts, alone or in a group.\n" \
                                           "The experiment is composed by two sessions, and now you can start the second session. " \
                                           "It will take approximately 25 minutes. \n" \
-                                       "Please use the following link to start the session 2: https://127.0.0.1:5000/session_two \n" \
+                                       "Please use the following link to start the session 2: https://<Host>:<Port>/session_two \n" \
                                        "If you need further information or clarification, do not hesitate to write via email to:\n" \
                                        "f.barile@maastrichtuniversity.nl. \n" \
                                        "Thanks in advance for your kind cooperation."
