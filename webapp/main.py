@@ -196,15 +196,16 @@ def session_one():
         if not btn:
             # not a submit: redirect to the current view for the user
             user, next_view, current_state = ctrl.get_current_view_for_user(current_user_id)
-            session['invited'] = user['is_invited']
+            if user:
+                session['invited'] = user['is_invited']
 
-            print(current_state, next_view)
-            if current_state == 'INSERT_SELF_FFM':
-                session['FFM'] = ctrl.generate_ffm_dict(current_user_id)
-            elif current_state == 'INSERT_SELF_ROCI':
-                session['ROCI'] = ctrl.generate_roci_dict(current_user_id)
-            elif current_state == 'EVALUATE_SONGS_INDIVIDUAL':
-                session['INDIVIDUAL_SONGS'] = ctrl.generate_individual_songs_dict(current_user_id)
+                print(current_state, next_view)
+                if current_state == 'INSERT_SELF_FFM':
+                    session['FFM'] = ctrl.generate_ffm_dict(current_user_id)
+                elif current_state == 'INSERT_SELF_ROCI':
+                    session['ROCI'] = ctrl.generate_roci_dict(current_user_id)
+                elif current_state == 'EVALUATE_SONGS_INDIVIDUAL':
+                    session['INDIVIDUAL_SONGS'] = ctrl.generate_individual_songs_dict(current_user_id)
         else:
             # retrieve submit parameters
             next_view, missing_parameters_msg, add_to_session = \
@@ -239,20 +240,21 @@ def session_two():
         if not btn:
             # not a submit: redirect to the current view for the user
             user, next_view, current_state = ctrl.get_current_view_for_user(current_user_id)
-            session['invited'] = user['is_invited']
-            session['friend_nickname'] = user['friend_nickname']
+            if user:
+                session['invited'] = user['is_invited']
+                session['friend_nickname'] = user['friend_nickname']
 
-            print(current_state, next_view)
-            if current_state == 'INSERT_FRIEND_FFM':
-                session['FFM'] = ctrl.generate_ffm_dict(current_user_id)
-            elif current_state == 'INSERT_FRIEND_ROCI':
-                session['ROCI'] = ctrl.generate_roci_dict(current_user_id)
-            elif current_state == 'EVALUATE_SONGS_GROUP_FRIEND':
-                session['GROUP_SONGS'] = ctrl.generate_group_songs_dict(current_user_id, "friend")
-            elif current_state == 'EVALUATE_SONGS_GROUP_STRANGER':
-                session['GROUP_SONGS'] = ctrl.generate_group_songs_dict(current_user_id, "stranger")
-                # for question in session['ROCI']['questionnaire']:
-                #     print(question['INPUT_ID'], question['QUESTION_TEXT'])
+                print(current_state, next_view)
+                if current_state == 'INSERT_FRIEND_FFM':
+                    session['FFM'] = ctrl.generate_ffm_dict(current_user_id)
+                elif current_state == 'INSERT_FRIEND_ROCI':
+                    session['ROCI'] = ctrl.generate_roci_dict(current_user_id)
+                elif current_state == 'EVALUATE_SONGS_GROUP_FRIEND':
+                    session['GROUP_SONGS'] = ctrl.generate_group_songs_dict(current_user_id, "friend")
+                elif current_state == 'EVALUATE_SONGS_GROUP_STRANGER':
+                    session['GROUP_SONGS'] = ctrl.generate_group_songs_dict(current_user_id, "stranger")
+                    # for question in session['ROCI']['questionnaire']:
+                    #     print(question['INPUT_ID'], question['QUESTION_TEXT'])
         else:
             # retrieve submit parameters
             next_view, missing_parameters_msg, add_to_session = \

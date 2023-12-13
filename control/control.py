@@ -59,7 +59,10 @@ def get_current_view_for_user(current_user_id):
 
     if not user:
         # the user is not in the DB
-        return None, config.ERROR_VIEW_DICT['INVALID_USER']
+        return None, config.ERROR_VIEW_DICT['INVALID_USER'], 'INVALID_USER'
+
+    if user["current_state"]=="INCOMPLETE_USER":
+        return None, config.ERROR_VIEW_DICT['INCOMPLETE_USER'], 'INCOMPLETE_USER'
 
     current_state = user['current_state']
     return user, config.CURRENT_VIEW_DICT[current_state], current_state
@@ -78,6 +81,8 @@ def manage_submit(current_user_id, form, mail):
     if not user:
         # the user is not in the DB
         return config.ERROR_VIEW_DICT['INVALID_USER'], None, None
+    if user["current_state"]=="INCOMPLETE_USER":
+        return config.ERROR_VIEW_DICT['INCOMPLETE_USER'], None, None
 
     invited = user['is_invited']
     current_state, error_msg, add_to_session = __perform_submit(user['current_state'], user, invited, form, mail)
