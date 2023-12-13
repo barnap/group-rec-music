@@ -30,4 +30,5 @@ def drop_database():
 
 if __name__ == '__main__':
     drop_database()
+    # print(config.PARTICIPATION_EMAIL_TEXT)
 

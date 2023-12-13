@@ -288,6 +288,30 @@ def load_friends_pairs_list():
     return pair_list
 
 
+def load_not_completed_session1_list():
+    db = db_utils.create_connection_db()
+    cur = db.cursor()
+    cur.execute("""
+                            SELECT id
+                            FROM user_app
+                            WHERE is_admin = false and current_state != %s
+                            """, ("END_1",))
+
+    results = cur.fetchall()
+    print('Executed the query')
+    print(len(results))
+
+    id_list = list()
+    for res in results:
+        id_list.append(res[0])
+
+    db.commit()
+    print('Executed the query')
+    db.close()
+    print('Closed the dao!')
+    return id_list
+
+
 def update_strangers_from_pairs_list(strangers_pairs_list):
     db = db_utils.create_connection_db()
 
@@ -373,6 +397,43 @@ def start_session_two():
     print('Closed the dao!')
     return cur
 
+
+def set_uncomplete_end_state(not_completed_pairs):
+    db = db_utils.create_connection_db()
+
+    for pair in not_completed_pairs:
+        for id in pair:
+            cur = db.cursor()
+            cur.execute("""
+                        UPDATE user_app 
+                        SET current_state = %s
+                        WHERE id = %s
+                        """, ('INCOMPLETE_USER', id))
+
+    db.commit()
+    print('Executed the query')
+    db.close()
+    print('Closed the dao!')
+    return None
+
+
+def set_session_two_state(completed_pairs):
+    db = db_utils.create_connection_db()
+
+    for pair in completed_pairs:
+        for id in pair:
+            cur = db.cursor()
+            cur.execute("""
+                        UPDATE user_app 
+                        SET current_state = %s
+                        WHERE id = %s
+                        """, (config.SESSION_2_STATUSES[0], id))
+
+    db.commit()
+    print('Executed the query')
+    db.close()
+    print('Closed the dao!')
+    return None
 
 def start_session_three():
     db = db_utils.create_connection_db()

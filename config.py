@@ -62,21 +62,23 @@ TRACK_TO_SELECT = int(os.environ['TRACK_TO_SELECT'])
 # '2FDTHlrBguDzQkp7PVj16Q',
 # '7ABLbnD53cQK00mhcaOUVG']
 
-FIX_TRACK_ID_LIST = ['6EuRU9AoOj1xgVme6YNBv8',
-                     '3rm2WrETcJxFjOawcfiG3h',
-                     '2SW0q2M7fYw27ZZmxGGToo',
-                     '47bUyxG4UYJG2DKLdWrz2e',
-                     '69mZE03ZRctshpkHW5Zzs3',
-                     '0DRR9F3to4Luddk7m8pXmH',
-                     '783RuwtbSBY81dJbtfaMYU',
-                     '4ogHSgRXA2dSDQua8eOJ1a',
-                     '7JiNqs52r97rOOjad76JhD',
-                     '0Xus6HrrWoNXeT8l0prJ3j',
-                     '2yqVwgPoCzIwbRjrVmfFWW',
-                     '2ViSWfhT0kvEulXA1HH7Wk',
-                     '6RBLcDQvA3VgQ8vHoXoo0v',
-                     '3198LMj0bpnXj8Mb1GLo3u',
-                     '2zLMOb6Z01X9PLxl09xJ9t']
+FIX_TRACK_ID_LIST = [
+    '490eG6GdyHsKOFi9pPMERK',
+    '5xQr5TxQ77siaKfuyiJbT0',
+    '4EncKcnRsZd3VgOQd9N8Jf',
+    '0RT86wBrufYQZSdN852Wjn',
+    '4jQCJchULcVfb3LTjJ5rn1',
+    '1pP5Fio1IC3B4TITdeZBLa',
+    '6djFRgAtFL0qTELYJqVicP',
+    '7dbyaRWWFvB9UG2vcwTd3J',
+    '11n8LudggXuZXmldSlAadR',
+    '7l6glc1SRrt6BAncgDPrPu',
+    '1uTfgYieZbJ2qZ2v2ICndT',
+    '2uE5JDb0ZJsJkzZ8gvL5jw',
+    '1gPNdHsHpLKziD7ASH9RCd',
+    '2e3FFYFj3PuH9rMwKmjgYF',
+    '30cEVc7Nq5EC0149zqCNBM'
+  ]
 
 TRACK_NUMBER = len(FIX_TRACK_ID_LIST)
 ADMIN_USER_ID_LIST = (os.environ['SUPER_ADMIN'],)
@@ -86,7 +88,7 @@ ADMIN_USER_ID_LIST = (os.environ['SUPER_ADMIN'],)
 PARTICIPATION_EMAIL_TEXT = "We will conduct a user study evaluating the satisfaction related on listening to different " \
                            "songs in different contexts, alone or in a group. For the participation, it is necessary that " \
                            "you have a Google account.\n" \
-                           "The experiment is composed by two sessions, scheduled in the next 2 weeks: Bot sessions should" \
+                           "The experiment is composed by two sessions, scheduled in the next 2 weeks: Both sessions should" \
                             " take approximately 30 minutes. You will be" \
                             " asked to register on our web application using your Google account and to indicate the" \
                            " email address and the nickname of a second person who can perform the experiment with you" \
@@ -107,7 +109,7 @@ INVITATION_EMAIL_TEXT = "You have been invited by your friend <EmailFriend> to p
                         "evaluating the satisfaction related on listening to different " \
                         "songs in different contexts, alone or in a group. For the participation, it is necessary that " \
                         "you have a Google account.\n" \
-                        "The experiment is composed by two sessions, scheduled in the next 2 weeks: Bot sessions should" \
+                        "The experiment is composed by two sessions, scheduled in the next 2 weeks: Both sessions should" \
                         " take approximately 30 minutes. You will be" \
                         " asked to register on our web application using your Google account." \
                         "We will use your email address to notify the start of the session 2," \
@@ -128,7 +130,7 @@ NOTIFICATION_SESSION_START_EMAIL_SUBJECT[2] = "Notification of the start of user
 NOTIFICATION_SESSION_START_EMAIL_TEXT[2] = "Thanks again for your participation in our user study evaluating the satisfaction related " \
                                           "on listening to different songs in different contexts, alone or in a group.\n" \
                                           "The experiment is composed by two sessions, and now you can start the second session. " \
-                                          "It will take approximately 25 minutes. \n" \
+                                          "It will take approximately 30 minutes. \n" \
                                        "Please use the following link to start the session 2: https://<Host>:5000/session_two \n" \
                                        "If you need further information or clarification, do not hesitate to write via email to:\n" \
                                        "f.barile@maastrichtuniversity.nl. \n" \
@@ -224,6 +226,7 @@ ERROR_VIEW_DICT = dict()
 ERROR_VIEW_DICT['INVALID_USER'] = "login.html"
 ERROR_VIEW_DICT['NO_ADMIN_USER'] = "error_no_admin.html"
 ERROR_VIEW_DICT['NO_USER'] = "error_no_user.html"
+ERROR_VIEW_DICT['INCOMPLETE_USER'] = "error_incomplete_user.html"
 
 ADMIN_VIEW_DICT = dict()
 ADMIN_VIEW_DICT['PROCESS_COMPLETED'] = "process_completed.html"

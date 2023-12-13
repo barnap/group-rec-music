@@ -630,14 +630,40 @@ def __generate_strangers_pairs():
     friends_pairs_list = dao_user.load_friends_pairs_list()
     print(friends_pairs_list)
 
+    not_completed = dao_user.load_not_completed_session1_list()
+    print("NOT COMPLETED", not_completed)
+
+    completed_pairs, not_completed_pairs = __filter_pairs(friends_pairs_list,not_completed)
+    print("COMPLETED AND NOT COMPLETED PAIRS")
+    print(completed_pairs)
+    print(not_completed_pairs)
+
     print("GENERATE STRANGERS PAIRS")
-    strangers_pairs_list = utils.create_random_pairs_from_pairs_list(friends_pairs_list)
+
+    strangers_pairs_list = utils.create_random_pairs_from_pairs_list(completed_pairs)
     print(strangers_pairs_list)
 
     print("UPDATING DB")
     dao_user.update_strangers_from_pairs_list(strangers_pairs_list)
 
+    print("UPDATE USER STATUSES")
+    dao_user.set_uncomplete_end_state(not_completed_pairs)
+    dao_user.set_session_two_state(completed_pairs)
+
     return strangers_pairs_list
+
+
+def __filter_pairs(friends_pairs_list,not_completed):
+    completed_pairs = list()
+    not_completed_pairs = list()
+
+    for pair in friends_pairs_list:
+        if pair[0] in not_completed or pair[1] in not_completed:
+            not_completed_pairs.append(pair)
+        else:
+            completed_pairs.append(pair)
+    return completed_pairs, not_completed_pairs
+
 
 
 def __complete_playlists():
@@ -737,7 +763,7 @@ def start_next_session(current_user_id):
         __complete_playlists() # SAVES PAIRS EVALUATIONS
 
         # Start session 2
-        dao_user.start_session_two()
+        # dao_user.start_session_two()
         dao_session_info.update_current_session(2)
         __send_notification_start_session(2)
     # elif current_session==2:
