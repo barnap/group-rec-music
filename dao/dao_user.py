@@ -81,6 +81,21 @@ def update_user_email_nick(user_id, email, nickname, next_state):
     return cur
 
 
+def change_is_user(user_id, is_user):
+    db = db_utils.create_connection_db()
+    cur = db.cursor()
+    cur.execute("""
+            UPDATE user_app 
+            SET is_user = %s
+            WHERE id = %s
+            """, (is_user, user_id))
+    db.commit()
+    print('Executed the query')
+    db.close()
+    print('Closed the dao!')
+    return cur
+
+
 def check_user_invited(email):
     db = db_utils.create_connection_db()
     cur = db.cursor()

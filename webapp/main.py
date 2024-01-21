@@ -184,6 +184,7 @@ def session_one():
     session['FFM'] = None
     session['ROCI'] = None
     session['session_route'] = ctrl.get_session_route(1)
+    session['LINK_INVITED'] = ctrl.get_link_invited()
 
     if "current_user" not in session:
         next_view = 'login.html'
@@ -198,14 +199,17 @@ def session_one():
             user, next_view, current_state = ctrl.get_current_view_for_user(current_user_id)
             if user:
                 session['invited'] = user['is_invited']
+                session['user_email'] = user['email']
 
                 print(current_state, next_view)
+
                 if current_state == 'INSERT_SELF_FFM':
                     session['FFM'] = ctrl.generate_ffm_dict(current_user_id)
                 elif current_state == 'INSERT_SELF_ROCI':
                     session['ROCI'] = ctrl.generate_roci_dict(current_user_id)
                 elif current_state == 'EVALUATE_SONGS_INDIVIDUAL':
                     session['INDIVIDUAL_SONGS'] = ctrl.generate_individual_songs_dict(current_user_id)
+                session['PERCENTAGE'] = ctrl.get_percentage_comp(current_state)
         else:
             # retrieve submit parameters
             next_view, missing_parameters_msg, add_to_session = \
@@ -255,6 +259,7 @@ def session_two():
                     session['GROUP_SONGS'] = ctrl.generate_group_songs_dict(current_user_id, "stranger")
                     # for question in session['ROCI']['questionnaire']:
                     #     print(question['INPUT_ID'], question['QUESTION_TEXT'])
+                session['PERCENTAGE'] = ctrl.get_percentage_comp(current_state)
         else:
             # retrieve submit parameters
             next_view, missing_parameters_msg, add_to_session = \
@@ -350,11 +355,17 @@ def admin():
         current_user_id = session["current_user"]
 
         btn_new_session = request.form.get('next_session_admin')
-        if not btn_new_session:
-            next_view, error_msg, add_to_session = ctrl.manage_submit_admin(current_user_id)
-        else:
+        btn_change_user = request.form.get('change_user_admin')
+        if btn_new_session:
             # start next session
             next_view, error_msg, add_to_session = ctrl.start_next_session(current_user_id)
+        elif btn_change_user:
+            user_to_remove = request.form.get('hidden_remove_user')
+            user_to_add = request.form.get('hidden_add_user')
+            next_view, error_msg, add_to_session = ctrl.change_is_user(current_user_id, user_to_remove, user_to_add)
+            print(add_to_session['users_info'])
+        else:
+            next_view, error_msg, add_to_session = ctrl.manage_submit_admin(current_user_id)
 
         session['error_msg'] = error_msg
         if add_to_session:

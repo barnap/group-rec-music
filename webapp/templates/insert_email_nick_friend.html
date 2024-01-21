@@ -28,6 +28,11 @@
 
 <body>
 
+<div id="progress-general" class="progress" style="height: 3rem">
+    <div id="progress-bar-general" class="progress-bar progress-bar-general bg-success" role="progressbar" style="width: {{session['PERCENTAGE']}}%" aria-valuenow="{{session['PERCENTAGE']}}" aria-valuemin="0" aria-valuemax="100" ></div>
+</div>
+<div class="p-3 border border-5 border-dark rounded-end">
+
 {% if session['missing_parameters_msg'] %}
 <div class="alert alert-danger" role="alert">
     {{ session['missing_parameters_msg'] }}
@@ -68,6 +73,7 @@
             class="btn btn-info btn-block" type="submit" >Submit</button>
 
 </form>
+</div>
 
 <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 

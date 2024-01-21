@@ -13,6 +13,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 import config
+import control.control as ctrl
 
 
 
@@ -58,8 +59,9 @@ def send_invite_friend(friend_email, current_user_email, mail):
     email_message = config.INVITATION_EMAIL_TEXT.replace("<EmailFriend>", current_user_email)\
         .replace("<Host>", config.HOST).replace("<Port>", config.PORT)
 
+
     sender_email = config.mail_settings["MAIL_DEFAULT_SENDER"]
-    # sender_password = config.mail_settings["MAIL_PASSWORD"]
+
     receiver_email = friend_email
 
     message = MIMEMultipart()
@@ -68,14 +70,19 @@ def send_invite_friend(friend_email, current_user_email, mail):
     message['Subject'] = email_subject
     message.attach(MIMEText(email_message, 'plain'))
 
-    # server = smtplib.SMTP('smtp.gmail.com', 587)
-    # server.starttls()
-    # server.login(sender_email, sender_password)
-    # server.sendmail(sender_email, receiver_email, message.as_string())
+    if ctrl.is_server_mode():
 
-    server = smtplib.SMTP('smtp.maastrichtuniversity.nl', 25)
-    server.send_message(message)
-    server.quit()
+
+        server = smtplib.SMTP('smtp.maastrichtuniversity.nl', 25)
+        server.send_message(message)
+        server.quit()
+    else:
+        sender_password = config.mail_settings["MAIL_PASSWORD"]
+
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
 
     print('Email Sent!')
 

@@ -68,7 +68,7 @@ FIX_TRACK_ID_LIST = [
     '4EncKcnRsZd3VgOQd9N8Jf',
     '0RT86wBrufYQZSdN852Wjn',
     '4jQCJchULcVfb3LTjJ5rn1',
-    '1pP5Fio1IC3B4TITdeZBLa',
+    '79h7F2ZL2jfysXEYdHfwyq',
     '6djFRgAtFL0qTELYJqVicP',
     '7dbyaRWWFvB9UG2vcwTd3J',
     '11n8LudggXuZXmldSlAadR',
@@ -78,6 +78,22 @@ FIX_TRACK_ID_LIST = [
     '1gPNdHsHpLKziD7ASH9RCd',
     '2e3FFYFj3PuH9rMwKmjgYF',
     '30cEVc7Nq5EC0149zqCNBM'
+    ###### ALTERNATIVE SET #####
+    # '3OB8tXG4qxdvs5Y9cZDsMa',
+    # '0x23fPcfGI5FCpeVadnCdo',
+    # '59ujQJCSRNgLtKQ1ly3b7c',
+    # '4EncKcnRsZd3VgOQd9N8Jf',
+    # '0ZFq3raMFdXllZJoTbBRnQ',
+    # '7z4VPtZm9g9dxC83ratUFM',
+    # '4LzdviA9tys39CccjkJubr',
+    # '2I0kfxKcQTLoer605Q74aQ',
+    # '0QV3swr7L8MZr72lL2izV1',
+    # '5ezVqhuo9PDNqsGKsKOPyG',
+    # '53ILZZz0cySVRbHwgovlQI',
+    # '1Dww8WMEA5C9jp01ILGzzW',
+    # '5j72kVstS2gHKl8zWJDNz0',
+    # '31AYjxq6VkR57EgcwAJFmO',
+    # '6MD6xpFK4cfquxRqXxqwjq'
   ]
 
 TRACK_NUMBER = len(FIX_TRACK_ID_LIST)
@@ -181,6 +197,7 @@ SESSION_ROUTE[3] = "session_three"
 # )
 
 SESSION_1_STATUSES = (
+    'START_SESSION_1',
     'INSERT_EMAIL_NICK',
     'INSERT_EMAIL_NICK_FRIEND',
     'INSERT_AGE_GENDER',
@@ -204,7 +221,24 @@ STATUSES[1] = SESSION_1_STATUSES
 STATUSES[2] = SESSION_2_STATUSES
 # STATUSES[3] = SESSION_3_STATUSES
 
+PERCENTAGE_COMP = dict()
+PERCENTAGE_COMP['START_SESSION_1'] = 100 * (0 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_EMAIL_NICK'] = 100 * (1 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_EMAIL_NICK_FRIEND'] = 100 * (2 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_AGE_GENDER'] = 100 * (3 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_SELF_FFM'] = 100 * (4 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_SELF_ROCI'] = 100 * (5 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['EVALUATE_SONGS_INDIVIDUAL'] = 100 * (6 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['END_1'] = 100 * (7 / (len(SESSION_1_STATUSES)-1))
+PERCENTAGE_COMP['START_SESSION_2'] = 100 * (0 / (len(SESSION_2_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_FRIEND_FFM'] = 100 * (1 / (len(SESSION_2_STATUSES)-1))
+PERCENTAGE_COMP['INSERT_FRIEND_ROCI'] = 100 * (2 / (len(SESSION_2_STATUSES)-1))
+PERCENTAGE_COMP['EVALUATE_SONGS_GROUP_FRIEND'] = 100 * (3 / (len(SESSION_2_STATUSES)-1))
+PERCENTAGE_COMP['EVALUATE_SONGS_GROUP_STRANGER'] = 100 * (4 / (len(SESSION_2_STATUSES)-1))
+PERCENTAGE_COMP['END_2'] = 100 * (5 / (len(SESSION_2_STATUSES)-1))
+
 CURRENT_VIEW_DICT = dict()
+CURRENT_VIEW_DICT['START_SESSION_1'] = "start_session_one.html"
 CURRENT_VIEW_DICT['INSERT_EMAIL_NICK'] = "insert_email_nick.html"
 CURRENT_VIEW_DICT['INSERT_EMAIL_NICK_FRIEND'] = "insert_email_nick_friend.html"
 CURRENT_VIEW_DICT['INSERT_AGE_GENDER'] = "insert_age_gender.html"
@@ -237,6 +271,7 @@ ADMIN_VIEW_DICT['ADMIN_STATS'] = "admin_statistics.html"
 ################### REQUIRED PARAMETERS FOR STATUSES ##################
 
 REQUIRED_PARAMETERS = dict()
+REQUIRED_PARAMETERS['START_SESSION_1'] = ()
 REQUIRED_PARAMETERS['INSERT_EMAIL_NICK'] = ('email', 'nickname', 'pronoun')
 REQUIRED_PARAMETERS['INSERT_EMAIL_NICK_FRIEND'] = ('friend_email', 'friend_nickname', 'friend_pronoun')
 REQUIRED_PARAMETERS['INSERT_AGE_GENDER'] = ('age', 'gender')
@@ -281,6 +316,7 @@ PRONOUNS = dict()
 PRONOUNS[1]= {
     'SUBJECT' : 'he',
     'OBJECT' : 'him',
+    'POSSESSIVE_ADJ' : 'his',
     'POSSESSIVE' : 'his',
     'REFLEXIVE' : 'himself',
     'TO_BE_CON' : 'is',
@@ -295,6 +331,7 @@ PRONOUNS[1]= {
 PRONOUNS[2]= {
     'SUBJECT' : 'she',
     'OBJECT' : 'her',
+    'POSSESSIVE_ADJ' : 'her',
     'POSSESSIVE' : 'hers',
     'REFLEXIVE' : 'herself',
     'TO_BE_CON' : 'is',
@@ -309,6 +346,7 @@ PRONOUNS[2]= {
 PRONOUNS[3]= {
     'SUBJECT' : 'they',
     'OBJECT' : 'them',
+    'POSSESSIVE_ADJ' : 'their',
     'POSSESSIVE' : 'theirs',
     'REFLEXIVE' : 'themselves',
     'TO_BE_CON' : 'are',
@@ -326,7 +364,7 @@ AGREEABLENESS_FFM_DICT['LOW_STORY'] = '<Nickname> <to_have_con> a sharp tongue a
                                       '<Subject> suspect<verb_con> hidden motives in people. <Subject> hold<verb_con> grudges and get<verb_con> back ' \
                                       'at others. ' \
                                       '<Subject> insult<verb_con> and contradict<verb_con> people, believing <subject> <to_be_con> better than them. ' \
-                                      '<Subject> make<verb_con> demands on others, and <to_be_con> out for <possessive> own personal gain.' \
+                                      '<Subject> make<verb_con> demands on others, and <to_be_con> out for <possessive_adj> own personal gain. ' \
                                       '<Nickname> tend<verb_con> to be calm and quite like<verb_con> exploring new ideas.'
 AGREEABLENESS_FFM_DICT['HIGH_STORY'] = '<Nickname> <to_have_con> a good word for everyone, believing that they have good ' \
                                        'intentions. <Subject> respect<verb_con> others and accept<verb_con> people as they are. ' \
@@ -336,22 +374,22 @@ AGREEABLENESS_FFM_DICT['HIGH_STORY'] = '<Nickname> <to_have_con> a good word for
 
 CONSCENTIOUSNESS_FFM_DICT = dict()
 CONSCENTIOUSNESS_FFM_DICT['INPUT_ID'] = 'conscentiousness'
-CONSCENTIOUSNESS_FFM_DICT['LOW_STORY'] = '<Nickname> procrastinate<verb_con> and waste<verb_con> <possessive> time. <Subject> find<verb_con> it difficult to get down' \
+CONSCENTIOUSNESS_FFM_DICT['LOW_STORY'] = '<Nickname> procrastinate<verb_con> and waste<verb_con> <possessive_adj> time. <Subject> find<verb_con> it difficult to get down' \
                                          'to work. <Subject> do<irr_verb_con> just enough work to get by and often do<irr_verb_con>n’t see things ' \
-                                         'through, leaving them unfinished. <Subject> shirk<verb_con> <possessive> duties and mess<irr_verb_con> things up. ' \
-                                         '<Subject> do<irr_verb_con>n’t put <possessive> mind on the task at hand and need<verb_con> a push to get started. ' \
+                                         'through, leaving them unfinished. <Subject> shirk<verb_con> <possessive_adj> duties and mess<irr_verb_con> things up. ' \
+                                         '<Subject> do<irr_verb_con>n’t put <possessive_adj> mind on the task at hand and need<verb_con> a push to get started. ' \
                                          '<Nickname> tend<verb_con> to enjoy talking with people.'
 CONSCENTIOUSNESS_FFM_DICT['HIGH_STORY'] = '<Nickname> <to_be_con> always prepared. <Subject> get<verb_con> tasks done right away, paying attention' \
                                           ' to detail. <Subject> make<verb_con> plans and stick<verb_con> to them and <to_carry_con> them out. ' \
                                           '<Subject> complet<irr_verb_con> tasks successfully, doing things according to a plan. ' \
-                                          '<Subject> <to_be_con> exacting in <possessive> work; <subject> finish<irr_verb_con> what he start<verb_con>. ' \
+                                          '<Subject> <to_be_con> exacting in <possessive_adj> work; <subject> finish<irr_verb_con> what he start<verb_con>. ' \
                                           '<Nickname> <to_be_con> quite a nice person, tend<verb_con> to enjoy talking with people, ' \
                                           'and quite like<verb_con> exploring new ideas.'
 
 EXTRAVERSION_FFM_DICT = dict()
 EXTRAVERSION_FFM_DICT['INPUT_ID'] = 'extraversion'
 EXTRAVERSION_FFM_DICT['LOW_STORY'] = '<Nickname> <to_have_con> little to say to others, preferring to stay in the background. ' \
-                                     '<Subject> would describe <possessive> life experiences as somewhat dull. ' \
+                                     '<Subject> would describe <possessive_adj> life experiences as somewhat dull. ' \
                                      '<Subject> do<irr_verb_con>n’t like drawing attention to <reflexive>, and do<irr_verb_con>n’t talk a lot. ' \
                                      '<Subject> avoid<verb_con> contact with others and <to_be_con> hard to get to know. ' \
                                      '<Subject> retreat<verb_con> from others, finding it difficult to approach them. ' \
@@ -359,7 +397,7 @@ EXTRAVERSION_FFM_DICT['LOW_STORY'] = '<Nickname> <to_have_con> little to say to 
 EXTRAVERSION_FFM_DICT['HIGH_STORY'] = '<Nickname> feel<verb_con> comfortable around people and make<verb_con> friends easily. ' \
                                       '<Subject> <to_be_con> skilled in handling social situations, and <to_be_con> the life and soul of ' \
                                       'the party. <Subject> know<verb_con> how to start conversations and easily captivate<verb_con> ' \
-                                      '<possessive> audience. <Subject> warm<verb_con> up quickly to others, and like<verb_con> talking to a ' \
+                                      '<possessive_adj> audience. <Subject> warm<verb_con> up quickly to others, and like<verb_con> talking to a ' \
                                       'lot of different people at parties. <Subject> do<irr_verb_con>n’t mind being the centre ' \
                                       'of attention and cheer<verb_con> people up. <Nickname> can sometimes be insensitive.'
 
@@ -371,12 +409,12 @@ EMOTIONAL_STABILITY_FFM_DICT['LOW_STORY'] = '<Nickname> often feel<verb_con> sad
                                             '<Subject> get<verb_con> stressed out easily, fearing the worst. ' \
                                             '<Subject> panic<verb_con> easily and <to_worry_con> about things. ' \
                                             '<Nickname> <to_be_con> quite a nice person who tend<verb_con> to enjoy talking with people' \
-                                            ' and tend<verb_con> to do <possessive> work.'
+                                            ' and tend<verb_con> to do <possessive_adj> work.'
 EMOTIONAL_STABILITY_FFM_DICT['HIGH_STORY'] = '<Nickname> seldom feel<verb_con> sad and <to_be_con> comfortable with <reflexive>. ' \
                                              '<Subject> rarely get<verb_con> irritated, <to_be_con> not easily bothered by things and <subject>' \
                                              ' <to_be_con> relaxed most of the time. <Subject> <to_be_con> not easily frustrated and seldom' \
                                              ' get<verb_con> angry with <reflexive>. <Subject> remain<verb_con> calm under pressure and rarely' \
-                                             ' lose<verb_con> <possessive> composure.'
+                                             ' lose<verb_con> <possessive_adj> composure.'
 
 OPENESS_FFM_DICT = dict()
 OPENESS_FFM_DICT['INPUT_ID'] = 'openess'
@@ -394,8 +432,8 @@ OPENESS_FFM_DICT['HIGH_STORY'] = '<Nickname> believe<verb_con> in the importance
 
 ATTENTION_CHECK_DICT = dict()
 ATTENTION_CHECK_DICT['INPUT_ID'] = 'attention_check'
-ATTENTION_CHECK_DICT['LOW_STORY'] = 'THIS IS AN ATTENTION CHECK. PLEASE MOVE THE SLIDER ON THE RIGHT'
-ATTENTION_CHECK_DICT['HIGH_STORY'] = 'THIS IS AN ATTENTION CHECK. PLEASE MOVE THE SLIDER ON THE RIGHT'
+ATTENTION_CHECK_DICT['LOW_STORY'] = 'This is an attention check. Please, move the slider to the right.'
+ATTENTION_CHECK_DICT['HIGH_STORY'] = 'This is an attention check. Please, move the slider to the right.'
 
 FFM_STORIES = [
     AGREEABLENESS_FFM_DICT,
@@ -608,63 +646,76 @@ ROCI_QUESTIONS_SELF[25] = "I sometimes use my power to win a competitive situati
 ROCI_QUESTIONS_SELF[26] = "I try to keep my disagreement with my peers to myself in order to avoid hard feelings."
 ROCI_QUESTIONS_SELF[27] = "I try to avoid unpleasant exchanges with my peers."
 ROCI_QUESTIONS_SELF[28] = "I try to work with my peers for a proper understanding of a problem."
-ROCI_QUESTIONS_SELF[29] = "THIS IS AN ATTENTION CHECK! PLEASE SELECT \"Strongly Agree\"."
+ROCI_QUESTIONS_SELF[29] = "This is an attention check. Please, select \"Strongly Agree\"."
 
 ROCI_QUESTIONS_PEER = dict()
 
-ROCI_QUESTIONS_PEER[1] = "<Nickname> <to_try_con> to investigate an issue with <possessive> peers to find a solution acceptable to " \
+ROCI_QUESTIONS_PEER[1] = "<Nickname> <to_try_con> to investigate an issue with <possessive_adj> peers to find a solution acceptable to " \
                          "them."
-ROCI_QUESTIONS_PEER[2] = "<Nickname> generally <to_try_con> to satisfy the needs of <possessive> peers."
-ROCI_QUESTIONS_PEER[3] = "<Nickname> attempt<verb_con> to avoid being \"put on the spot\" and <to_try_con> to keep <possessive> conflict " \
-                         "with <possessive> peers to <reflexive>."
-ROCI_QUESTIONS_PEER[4] = "<Nickname> <to_try_con> to integrate <possessive> ideas with those of <possessive> peers to come up with a " \
+ROCI_QUESTIONS_PEER[2] = "<Nickname> generally <to_try_con> to satisfy the needs of <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[3] = "<Nickname> attempt<verb_con> to avoid being \"put on the spot\" and <to_try_con> to keep <possessive_adj> conflict " \
+                         "with <possessive_adj> peers to <reflexive>."
+ROCI_QUESTIONS_PEER[4] = "<Nickname> <to_try_con> to integrate <possessive_adj> ideas with those of <possessive_adj> peers to come up with a " \
                          "decision jointly."
-ROCI_QUESTIONS_PEER[5] = "<Nickname> <to_try_con> to work with <possessive> peers to find solution to a problem that satisfies " \
+ROCI_QUESTIONS_PEER[5] = "<Nickname> <to_try_con> to work with <possessive_adj> peers to find solution to a problem that satisfies " \
                          "their expectations."
-ROCI_QUESTIONS_PEER[6] = "<Nickname> usually avoid<verb_con> open discussion of <possessive> differences with <possessive> peers."
+ROCI_QUESTIONS_PEER[6] = "<Nickname> usually avoid<verb_con> open discussion of <possessive_adj> differences with <possessive_adj> peers."
 ROCI_QUESTIONS_PEER[7] = "<Nickname> <to_try_con> to find a middle course to resolve an impasse."
-ROCI_QUESTIONS_PEER[8] = "<Nickname> use<verb_con> <possessive> influence to get <possessive> ideas accepted."
-ROCI_QUESTIONS_PEER[9] = "<Nickname> use<verb_con> <possessive> authority to make a decision in <possessive> favor."
-ROCI_QUESTIONS_PEER[10] = "<Nickname> usually accommodate<verb_con> the wishes of <possessive> peers."
-ROCI_QUESTIONS_PEER[11] = "<Nickname> give<verb_con> in to the wishes of <possessive> peers."
-ROCI_QUESTIONS_PEER[12] = "<Nickname> exchange<verb_con> accurate information with <possessive> peers to solve a problem together."
-ROCI_QUESTIONS_PEER[13] = "<Nickname> usually allow<verb_con> concessions to <possessive> peers."
+ROCI_QUESTIONS_PEER[8] = "<Nickname> use<verb_con> <possessive_adj> influence to get <possessive_adj> ideas accepted."
+ROCI_QUESTIONS_PEER[9] = "<Nickname> use<verb_con> <possessive_adj> authority to make a decision in <possessive_adj> favor."
+ROCI_QUESTIONS_PEER[10] = "<Nickname> usually accommodate<verb_con> the wishes of <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[11] = "<Nickname> give<verb_con> in to the wishes of <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[12] = "<Nickname> exchange<verb_con> accurate information with <possessive_adj> peers to solve a problem together."
+ROCI_QUESTIONS_PEER[13] = "<Nickname> usually allow<verb_con> concessions to <possessive_adj> peers."
 ROCI_QUESTIONS_PEER[14] = "<Nickname> usually propose<verb_con> a middle ground for breaking deadlocks."
-ROCI_QUESTIONS_PEER[15] = "<Nickname> negotiate<verb_con> with <possessive> peers so that a compromise can be reached."
-ROCI_QUESTIONS_PEER[16] = "<Nickname> <to_try_con> to stay away from disagreement with <possessive> peers."
-ROCI_QUESTIONS_PEER[17] = "<Nickname> avoid<verb_con> an encounter with <possessive> peers."
-ROCI_QUESTIONS_PEER[18] = "<Nickname> use<verb_con> <possessive> expertise to make a decision in <possessive> favor."
-ROCI_QUESTIONS_PEER[19] = "<Nickname> often go<irr_verb_con> along with the suggestions of <possessive> peers."
+ROCI_QUESTIONS_PEER[15] = "<Nickname> negotiate<verb_con> with <possessive_adj> peers so that a compromise can be reached."
+ROCI_QUESTIONS_PEER[16] = "<Nickname> <to_try_con> to stay away from disagreement with <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[17] = "<Nickname> avoid<verb_con> an encounter with <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[18] = "<Nickname> use<verb_con> <possessive_adj> expertise to make a decision in <possessive_adj> favor."
+ROCI_QUESTIONS_PEER[19] = "<Nickname> often go<irr_verb_con> along with the suggestions of <possessive_adj> peers."
 ROCI_QUESTIONS_PEER[20] = "<Nickname> use<verb_con> \"give and take\" so that a compromise can be made."
-ROCI_QUESTIONS_PEER[21] = "<Nickname> <to_be_con> generally firm in pursuing <possessive> side of the issue."
+ROCI_QUESTIONS_PEER[21] = "<Nickname> <to_be_con> generally firm in pursuing <possessive_adj> side of the issue."
 ROCI_QUESTIONS_PEER[22] = "<Nickname> <to_try_con> to bring all their concerns out in the open so that the issues can be " \
                           "resolved in the best possible way."
-ROCI_QUESTIONS_PEER[23] = "<Nickname> collaborate<verb_con> with <possessive> peers to come up with decisions acceptable to them."
-ROCI_QUESTIONS_PEER[24] = "<Nickname> <to_try_con> to satisfy the expectations of <possessive> peers."
-ROCI_QUESTIONS_PEER[25] = "<Nickname> sometimes use<verb_con> <possessive> power to win a competitive situation."
-ROCI_QUESTIONS_PEER[26] = "<Nickname> <to_try_con> to keep <possessive> disagreement with <possessive> peers to <reflexive> in" \
+ROCI_QUESTIONS_PEER[23] = "<Nickname> collaborate<verb_con> with <possessive_adj> peers to come up with decisions acceptable to them."
+ROCI_QUESTIONS_PEER[24] = "<Nickname> <to_try_con> to satisfy the expectations of <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[25] = "<Nickname> sometimes use<verb_con> <possessive_adj> power to win a competitive situation."
+ROCI_QUESTIONS_PEER[26] = "<Nickname> <to_try_con> to keep <possessive_adj> disagreement with <possessive_adj> peers to <reflexive> in" \
                           " order to avoid hard feelings."
-ROCI_QUESTIONS_PEER[27] = "<Nickname> <to_try_con> to avoid unpleasant exchanges with <possessive> peers."
-ROCI_QUESTIONS_PEER[28] = "<Nickname> <to_try_con> to work with <possessive> peers for a proper understanding of a problem."
-ROCI_QUESTIONS_PEER[29] = "THIS IS AN ATTENTION CHECK! PLEASE SELECT \"Strongly Agree\"."
+ROCI_QUESTIONS_PEER[27] = "<Nickname> <to_try_con> to avoid unpleasant exchanges with <possessive_adj> peers."
+ROCI_QUESTIONS_PEER[28] = "<Nickname> <to_try_con> to work with <possessive_adj> peers for a proper understanding of a problem."
+ROCI_QUESTIONS_PEER[29] = "This is an attention check. Please, select \"Strongly Agree\"."
 
 ################### SONG EVALUATIONS TEXTS ##################
 
-IND_EVAL_INSTRUCTIONS = "You have to make a car journey of about one hour. How much would you like to listen to one of these songs during the trip?"
-IND_EVAL_INSTRUCTIONS_SHORT = "You have to make a car journey of about one hour. How much would you like to listen to the following song during the trip?"
+IND_EVAL_INSTRUCTIONS = "You have to make a car journey of about one hour. " \
+                              "In this scenario, you are travelling alone. " \
+                              "How much would you like to listen to the following song during the trip?"
+IND_EVAL_INSTRUCTIONS_SHORT = "You have to make a car journey of about one hour. " \
+                              "In this scenario, you are travelling alone. " \
+                              "How much would you like to listen to the following song during the trip?"
 IND_EVAL_TITLE = "Evaluate songs for a car trip"
 
 GROUP_EVAL_INSTRUCTIONS = dict()
-GROUP_EVAL_INSTRUCTIONS['friend'] = "You have to make a car journey of about one hour. In this scenario, your friend " \
-                                    "<Nickname_peer> should reach the same destination, hence you proposed to share the trip and the costs. " \
+GROUP_EVAL_INSTRUCTIONS['friend'] = "You have to make a car journey of about one hour. " \
+                                    "In this scenario, your friend " \
+                                    "<Nickname_peer> should reach the same destination, " \
+                                    "hence you proposed to share the trip and the costs. " \
                                     "The following 15 songs have been rated by both of you. " \
-                                    "In the next pages, you will see the selected songs, together with the evaluations performed by you and your friend. " \
-                                    "You will be asked to evaluate how much would you like to listen to each of these songs during your trip together."
-GROUP_EVAL_INSTRUCTIONS['stranger'] = "You have to make a car journey of about one hour. In this scenario, you posted your trip in an application for car sharing. " \
-                                      "<Nickname_peer> and you agreed to share the trip (in the car it's just you two). " \
+                                    "In the next pages, you will see the songs, " \
+                                    "together with the evaluations performed by you and your friend. " \
+                                    "You will be asked to evaluate how much would you like to listen to " \
+                                    "each of these songs during your trip together."
+GROUP_EVAL_INSTRUCTIONS['stranger'] = "You have to make a car journey of about one hour. In this scenario, " \
+                                      "you posted your trip in an application for car sharing. " \
+                                      "<Nickname_peer> and you agreed to share the trip " \
+                                      "(in the car it's just you two). " \
                                       "The following 15 songs have been rated by both of you. " \
-                                      "In the next pages, you will see the selected songs, together with the evaluations performed by you and your travelling companion. " \
-                                      "You will be asked to evaluate how much would you like to listen to each of these songs during your trip together."
+                                      "In the next pages, you will see the songs, " \
+                                      "together with the evaluations performed by you and " \
+                                      "your travelling companion. " \
+                                      "You will be asked to evaluate how much would you like to listen to" \
+                                      " each of these songs during your trip together."
 
 GROUP_EVAL_INSTRUCTIONS_SHORT = dict()
 GROUP_EVAL_INSTRUCTIONS_SHORT['friend'] = "You have to make a car journey of about one hour with your friend <Nickname_peer>. " \

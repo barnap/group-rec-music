@@ -30,12 +30,14 @@
   <!-- Navigation -->
 
 
-  <header class="masthead text-left text-white">
+  <header class="masthead text-left text-black">
     <div class="masthead-content">
       <div class="container">
         <h1 class="masthead-heading mb-0">Music Group Recommendations</h1>
           <h5>
-              Thanks for your participation! You will receive an email within a week on the email address indicated to notify the start of the session two.
+            Thanks for your participation!
+            You will receive an email within a week on the email address {{session['user_email']}}
+            to notify the start of session two.
           </h5>
 
 <!--          <form action="close_session_one" method="get">-->
@@ -48,10 +50,10 @@
 
       </div>
     </div>
-    <div class="bg-circle-1 bg-circle"></div>
-    <div class="bg-circle-2 bg-circle"></div>
-    <div class="bg-circle-3 bg-circle"></div>
-    <div class="bg-circle-4 bg-circle"></div>
+<!--    <div class="bg-circle-1 bg-circle"></div>-->
+<!--    <div class="bg-circle-2 bg-circle"></div>-->
+<!--    <div class="bg-circle-3 bg-circle"></div>-->
+<!--    <div class="bg-circle-4 bg-circle"></div>-->
   </header>
 
   <script src="static/vendor/jquery/jquery.min.js"></script>

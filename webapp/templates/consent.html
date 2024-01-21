@@ -30,12 +30,12 @@
   <!-- Navigation -->
 
 
-  <header class="masthead text-left text-white">
+  <header class="masthead text-left text-black">
     <div class="masthead-content">
       <div class="container">
         <h1 class="masthead-heading mb-0">Music Group Recommendations</h1>
           <h5>
-              The purpose of this study is to analyze the satisfaction related on listening to different songs in
+              The purpose of this study is to analyze the satisfaction related to listening to different songs in
               different contexts, alone or in a group. Nava Tintarev (Full Professor at Maastricht University, DACS)
               and Francesco Barile (Assistant Professor at Maastricht University, DACS) are conducting this evaluation.
           </h5>
@@ -45,24 +45,36 @@
               If you do not complete the survey, we will treat it as a withdrawal and your answers thus far will not be used.
           </h5>
           <h5>
-              The procedure involves filling two online surveys in two different sessions. Both the sessions will take approx. 30 minutes.
-              You will receive an email notifying the start of the session two on the email address you will indicate in the survey.
-              You will be asked to register on our web application using your Google account.
-              {% if session['invited'] %}
-                You will perform the experiment together with the person who invited you (but each one will carry out the
-                experiment individually).
-              {% else %}
-                You will be asked to indicate the email address and the nickname of a second person who can perform the
-                experiment with you (each one will carry out the experiment individually).
-              {% endif %}
-              Such person should be somebody with whom you have a close relationship (e.g., your partner or a close friend).
-              It is necessary for our purposes that both of you are available in performing the required sessions during the next weeks.
-          </h5>
-          <h5>
-              You will be asked to provide personality evaluations for both you and your friend. Such evaluations will be confidential and stored anonymously.
-              Furthermore, you will be asked to provide several evaluations related to songs listening in different contexts.
-              Please note that part of such songs evaluations will be shared with your friend and with a second randomly selected participant.
-              In this case, the participant will have no personal information to associate such evaluations to you.
+              The procedure involves filling out two online surveys in two different sessions, of about 30 minutes each. The second session will start in 10 days.
+              What to expect?
+              <ul style="list-style-position: inside;">
+                  <li>You will need a Google account to participate in this study. You will be asked to register on our web application using your Google account.</li>
+                  <li>
+                      {% if session['invited'] %}
+                        You will perform the experiment together with the person who invited you (each one will carry out the
+                        experiment individually). This should be somebody with whom you have a close relationship
+                        (e.g., your partner or a close friend).
+                      {% else %}
+                        You also will be asked to indicate the email address and the nickname of a second person who can perform the
+                        experiment with you (each one will carry out the experiment individually). This should be somebody with whom you
+                        have a close relationship (e.g., your partner or a close friend).
+                      {% endif %}
+                  </li>
+                  <li>
+                      You will be asked to provide personality evaluations for both you and your friend. Such evaluations will be confidential and stored anonymously.
+                      Furthermore, you will be asked to provide several evaluations related to songs listening in different contexts.
+                  </li>
+                  <li>
+                      Please note that these songs evaluations will be shared with your friend and (anonymously) with a second randomly selected participant.
+                      The random participant will have no personal information to associate such evaluations with you.
+                  </li>
+                  <li>
+                      It is necessary for our purposes that both of you are available to perform the required sessions during the next weeks.
+                  </li>
+                  <li>
+                      You will receive an email notifying you of the start of session two on the email address you indicate in the survey.
+                  </li>
+              </ul>
           </h5>
           <h5>
               All data is stored in a password protected electronic format. We will not store any information that will
@@ -71,31 +83,28 @@
                 Your email address is the only information we store in a not anonymized way. We will only use your email address for notification purposes.
               {% else %}
                 Your email address is the only information we store in a not anonymized way, and shared only with your
-                friend to let them know who is inviting them in the study, since this is a requirement for our study.
-                Then, we will only use your email address for notification purposes.
+                friend to let them know who is inviting them. Then, we will only use your email address for notification purposes.
               {% endif %}
-              After the end of the second session, you will have 30 days to contact us for deleting your data; then,
+              After the end of the second session, you will have 30 days to contact us to delete your data; then,
               we will delete all the email addresses and nicknames, and all the provided data will be stored anonymously.
               The results of this study will be used for the creation of scholarly publication.
               Furthermore, a public dataset will be generated and made available to the scientific community;
               in this case, only anonymized data will be included in such dataset.
           </h5>
           <h5>
-              Among the participants, we will extract one winner for an Amazon voucher worth 20 euros.
-              If you have any question about the research study, please contact Francesco Barile at the following mail address:
+              Among the participants, we will econduct a lottery for one Amazon voucher worth 20 euros.
+              If you have any questions about the research study, please contact Francesco Barile at the following mail address:
           </h5>
           <h5>
               f.barile@maastrichtuniversity.nl
           </h5>
           <h5>
-              This research has been reviewed by Ethics Review Committee Inner City faculties (ERCIC).
+              This research has been reviewed by the Ethics Review Committee Inner City faculties (ERCIC) at the Maastricht University.
           </h5>
           <h5>
               ELECTRONIC CONSENT: Please select your choices below.
           </h5>
-          <h5>
-              Clicking on the “agree” button below indicates that:
-          </h5>
+
           <h5>
 <!--              <ul style="list-style-position: inside;">-->
 <!--                  <li>You have read the above information</li>-->
@@ -105,7 +114,7 @@
               <ul class="list-group">
                       <li class="list-group-item-consent list-group-item">
                         <input class="form-check-input me-1" type="checkbox" value="" aria-label="..." id="agree_1" onclick="enableAgree();">
-                        I have read with the above information and agree
+                        I have read the above information and agree
                       </li>
                       <li class="list-group-item-consent list-group-item">
                         <input class="form-check-input me-1" type="checkbox" value="" aria-label="..." id="agree_2" onclick="enableAgree();">
@@ -124,7 +133,7 @@
               <center>
                     <button type="submit" class="btn-google btn btn-lg btn-block text-uppercase btn-outline" id="agree_btn" style="" disabled>
                         <img src="https://img.icons8.com/color/16/000000/google-logo.png">
-                            <span class="buttonText">Register Using Google</span>
+                            <span class="buttonText">Agree and Register Using Google</span>
         <!--                <h4><i class="fab fa-spotify"></i> Login with your Spotify Account</h4>-->
                     </button>
 <!--                  <button type="submit" class="btn btn-success spotify_button" id="agree" style="">-->
@@ -146,10 +155,10 @@
 
       </div>
     </div>
-    <div class="bg-circle-1 bg-circle"></div>
-    <div class="bg-circle-2 bg-circle"></div>
-    <div class="bg-circle-3 bg-circle"></div>
-    <div class="bg-circle-4 bg-circle"></div>
+<!--    <div class="bg-circle-1 bg-circle"></div>-->
+<!--    <div class="bg-circle-2 bg-circle"></div>-->
+<!--    <div class="bg-circle-3 bg-circle"></div>-->
+<!--    <div class="bg-circle-4 bg-circle"></div>-->
   </header>
 
   <script src="static/vendor/jquery/jquery.min.js"></script>

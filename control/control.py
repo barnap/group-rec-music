@@ -87,6 +87,8 @@ def manage_submit(current_user_id, form, mail):
     invited = user['is_invited']
     current_state, error_msg, add_to_session = __perform_submit(user['current_state'], user, invited, form, mail)
 
+    add_to_session['PERCENTAGE'] = config.PERCENTAGE_COMP[current_state]
+    add_to_session['user_email'] = user['email']
     return config.CURRENT_VIEW_DICT[current_state], error_msg, add_to_session
 
 
@@ -111,7 +113,10 @@ def __perform_submit(current_state, user, invited, form, mail):
         error_msg = __create_missing_parameters_msg(missing_parameters)
 
     # TODO: in each state we prepare the session for the next at the end; this is not very "generic" and needs to be reengineered
-    if current_state == 'INSERT_EMAIL_NICK':
+    if current_state == 'START_SESSION_1':
+        current_state, error_msg = __manage_start_session_one(current_state, current_user_id, form, invited)
+        # add_to_session['FFM'] = generate_ffm_dict(current_user_id)
+    elif current_state == 'INSERT_EMAIL_NICK':
         current_state, error_msg, email_friend, invited = __manage_insert_nick_email(current_state, current_user_id, form, invited)
         add_to_session['email_friend'] = email_friend
         add_to_session['invited'] = invited
@@ -377,6 +382,18 @@ def __manage_insert_group_eval(current_state, current_user_id, form, invited, re
     return current_state, error_message
 
 
+def __manage_start_session_one(current_state, current_user_id, form, invited):
+    error_msg = None
+
+    # find new state to update it
+    next_state = __find_next_state(current_state)
+    dao_user.update_user_status(current_user_id, next_state)
+
+    user = dao_user.load_user_data(current_user_id)
+    current_state = user['current_state']
+    return current_state, error_msg
+
+
 def __manage_start_session_two(current_state, current_user_id, form, invited):
     error_msg = None
 
@@ -455,6 +472,7 @@ def __create_string_for_preferred_pronouns(user, current_session, string, relati
         .replace("<Subject>", config.PRONOUNS[pronoun_key]['SUBJECT'].capitalize())\
         .replace("<subject>", config.PRONOUNS[pronoun_key]['SUBJECT'])\
         .replace("<object>", config.PRONOUNS[pronoun_key]['OBJECT'])\
+        .replace("<possessive_adj>", config.PRONOUNS[pronoun_key]['POSSESSIVE_ADJ']) \
         .replace("<possessive>", config.PRONOUNS[pronoun_key]['POSSESSIVE'])\
         .replace("<reflexive>", config.PRONOUNS[pronoun_key]['REFLEXIVE'])\
         .replace("<to_be_con>", config.PRONOUNS[pronoun_key]['TO_BE_CON'])\
@@ -784,6 +802,35 @@ def start_next_session(current_user_id):
     return config.ADMIN_VIEW_DICT[current_state], None, None
 
 
+def change_is_user(current_user_id, user_to_remove, user_to_add):
+    # 1) check if user_id is admin, if not return error no admin page
+    # 2) if admin, go on
+
+    user = dao_user.load_user_data(current_user_id)
+
+    if not user:
+        # the user is not in the DB
+        return config.ERROR_VIEW_DICT['INVALID_USER'], None, None
+
+    if not user["is_admin"]:
+        # the user is not an admin
+        return config.ERROR_VIEW_DICT['NO_ADMIN_USER'], None, None
+
+    if user_to_add:
+        user_id = user_to_add
+        is_user = True
+    else:
+        user_id = user_to_remove
+        is_user = False
+
+    dao_user.change_is_user(user_id, is_user)
+
+    # LOAD INFO FOR ADMIN DASHBOARD
+    current_state, error_msg, add_to_session = __load_users_info()
+
+    return config.ADMIN_VIEW_DICT[current_state], error_msg, add_to_session
+
+
 def __send_notification_start_session(session_to_start):
     user_email_list = dao_user.get_user_email_list()
     for email in user_email_list:
@@ -940,9 +987,15 @@ def __generate_bins_trait(personality_trait_values, n_bins, min, max):
         bins[i] = 0
 
     for val in personality_trait_values['PEER']:
-        norm_val = n_bins * ((val-min)/(max-min))
-        bins[floor(norm_val)] = bins[floor(norm_val)] + 1
+        if val == max:
+            bins[n_bins - 1] = bins[n_bins - 1] + 1
+        else:
+            norm_val = n_bins * ((val - min) / (max - min))
+            print(val, norm_val)
+            bins[floor(norm_val)] = bins[floor(norm_val)] + 1
+
     returned_bins['PEER'] = bins
+
     print(returned_bins)
     return returned_bins
 
@@ -951,7 +1004,7 @@ def __load_users_info():
     add_to_session['users_info'] = dao_user.load_all_users()
     current_session = db_utils.get_current_session()
     add_to_session['current_session'] = current_session
-    if current_session < 3:
+    if current_session < 2:
         add_to_session['next_session_button'] = "Start Session " + str(int(current_session)+1)
     else:
         add_to_session['next_session_button'] = "---"
@@ -997,6 +1050,10 @@ def get_session_route(current_session):
     return config.SESSION_ROUTE[current_session]
 
 
+def get_link_invited():
+    return "https://<Host>:5000/consent_form_invited".replace("<Host>", config.HOST)
+
+
 def get_port():
     return config.PORT
 
@@ -1006,6 +1063,9 @@ def get_url_for_server_mode(url):
         return url.replace('http://', 'https://', 1)
     else:
         return url
+
+def get_percentage_comp(current_state):
+    return config.PERCENTAGE_COMP[current_state]
 
 
 def is_server_mode():

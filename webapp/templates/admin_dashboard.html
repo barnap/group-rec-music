@@ -90,6 +90,10 @@
                         </th>
                         <th>Friend Accepted Invite
                         </th>
+                        <th>Is User
+                        </th>
+                        <th>Change User
+                        </th>
                     </tr>
                     {% for user in session['users_info'] %}
                     <tr>
@@ -106,6 +110,23 @@
                         <th>{{ user['invited_friend'] }}
                         </th>
                         <th>{{ user['friend_accepted'] }}
+                        </th>
+                        <th>{{ user['is_user'] }}
+                        </th>
+                        <th>
+                            <form action="admin" method="post">
+                                {% if user['is_user'] %}
+                                <button id="change_user_admin" name="change_user_admin" value="change_user_admin"
+                                    class="btn btn-info" type="submit" >
+                                    Remove</button>
+                                <input type="hidden" id="hidden_remove_user" name="hidden_remove_user" value="{{user['id']}}">
+                                {% else %}
+                                <button id="change_user_admin" name="change_user_admin" value="change_user_admin"
+                                    class="btn btn-info" type="submit" >
+                                    Add</button>
+                                <input type="hidden" id="hidden_add_user" name="hidden_add_user" value="{{user['id']}}">
+                                {% endif %}
+                            </form>
                         </th>
                     </tr>
                     {% endfor %}

@@ -28,32 +28,38 @@
 
 <body>
 
-<!-- Navigation -->
-<!--<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="user_profile">My profile!</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="create_group">Create Group</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="my_groups">My groups</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>-->
+<div id="progress-general" class="progress" style="height: 3rem">
+    <div id="progress-bar-general" class="progress-bar progress-bar-general bg-success" role="progressbar" style="width: {{session['PERCENTAGE']}}%" aria-valuenow="{{session['PERCENTAGE']}}" aria-valuemin="0" aria-valuemax="100" ></div>
+</div>
+<div class="p-3 border border-5 border-dark rounded-end">
 
 {% if session['missing_parameters_msg'] %}
 <div class="alert alert-danger" role="alert">
     {{ session['missing_parameters_msg'] }}
 </div>
 {% endif %}
+
+{% if session['invited'] %}
+<br>
+{% else %}
+<br><br><br>
+<div class="alert alert-info" role="info">
+
+<p>An invitation email has been sent at the email address you indicated. If you prefer, you can also share the following link with your friend to participate in the study: </p>
+{{ session['LINK_INVITED'] }}
+
+<button onclick="copyLink()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+      <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+      <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+    </svg>
+    Copy link</button>
+</div>
+<br>
+{% endif %}
+
+
+<br><br>
 <!-- Default form subscription -->
 <form class="text-center p-5" action="session_one" method="post">
     <p class="h4 mb-4">Complete your profile</p>
@@ -99,6 +105,7 @@
             class="btn btn-info btn-block" type="submit" >Submit</button>
 
 </form>
+</div>
 <!-- Default form subscription -->
 
 
@@ -114,6 +121,17 @@
 
 
 <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function copyLink() {
+
+   // Copy the text inside the text field
+  navigator.clipboard.writeText("{{session['LINK_INVITED']}}");
+
+  // Alert the copied text
+  alert("Link copied!");
+}
+</script>
 
 </body>
 

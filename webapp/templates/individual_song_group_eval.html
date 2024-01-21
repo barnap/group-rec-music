@@ -31,26 +31,10 @@
 
 <body>
 
-<!-- Navigation -->
-<!--<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="user_profile">My profile!</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="create_group">Create Group</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="my_groups">My groups</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>-->
+<div id="progress-general" class="progress" style="height: 3rem">
+    <div id="progress-bar-general" class="progress-bar progress-bar-general bg-success" role="progressbar" style="width: {{session['PERCENTAGE']}}%" aria-valuenow="{{session['PERCENTAGE']}}" aria-valuemin="0" aria-valuemax="100" ></div>
+</div>
+<div class="p-3 border border-5 border-dark rounded-end">
 
 {% if session['missing_parameters_msg'] %}
 <div class="alert alert-danger" role="alert">
@@ -67,7 +51,9 @@
     <div class="instrument_tab" style="display: none;">
         {{ session['GROUP_SONGS']['instruction']|safe }}
     </div>
-
+    <div id="progress" class="progress" style="height: 0rem">
+        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" ></div>
+    </div>
     {% for song in session['GROUP_SONGS']['individual_song_list'] %}
         <div class="instrument_tab" style="display: none;">
             <div class="text-center p-2">
@@ -80,7 +66,7 @@
                             {% if song['attention'] %}
                                 <img src="static/img/attention.png" alt="ATTENTION CHECK!!!!" width="300" height="300">
                                 <br>
-                                THIS IS AN ATTENTION CHECK!! PLEASE SELECT A VALUE GREATER THAN 75!!
+                                This is an attention check. Please, select a value greater than 75.
 
                             {% else %}
                                 <iframe src="{{song['SONG_URL']}}" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -148,6 +134,7 @@
     <button id="s1_submit" name="s1_submit" value="s1_submit" onclick="nextTab(1)"
         class="btn btn-info btn-block" ></button>
 </div>
+</div>
 
 <script>
     var currentTab = 0; // Current tab is set to be the first tab (0)
@@ -159,10 +146,13 @@
 
       if (n == 0) {
         document.getElementById("s1_submit").innerHTML = "Start";
+        $('#progress').css('height', '0rem');
       } else if (n == (tabList.length - 1)) {
+        $('#progress').css('height', '1rem');
         document.getElementById("s1_submit").disabled = true;
         document.getElementById("s1_submit").innerHTML = "Submit";
       } else {
+        $('#progress').css('height', '1rem');
         document.getElementById("s1_submit").disabled = true;
         document.getElementById("s1_submit").innerHTML = "Next";
       }
@@ -172,11 +162,20 @@
       var tabList = document.getElementsByClassName("instrument_tab");
       tabList[currentTab].style.display = "none";
       currentTab = currentTab + n;
+
+      currentPercentage = 100 * (currentTab / numTab())
+      $('#progress-bar').attr('aria-valuenow', currentPercentage).css('width', currentPercentage + "%");
+
       if (currentTab >= tabList.length) {
         document.getElementById("session_one_form").submit();
       } else {
         showTab(currentTab);
       }
+    }
+
+    function numTab() {
+        var tabList = document.getElementsByClassName("instrument_tab");
+        return tabList.length - 1;
     }
 
 		const $element = $('input[type="range"]');

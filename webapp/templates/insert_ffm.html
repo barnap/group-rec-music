@@ -29,26 +29,10 @@
 
 <body>
 
-<!-- Navigation -->
-<!--<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="user_profile">My profile!</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="create_group">Create Group</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="my_groups">My groups</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>-->
+<div id="progress-general" class="progress" style="height: 3rem">
+    <div id="progress-bar-general" class="progress-bar progress-bar-general bg-success" role="progressbar" style="width: {{session['PERCENTAGE']}}%" aria-valuenow="{{session['PERCENTAGE']}}" aria-valuemin="0" aria-valuemax="100" ></div>
+</div>
+<div class="p-3 border border-5 border-dark rounded-end">
 
 {% if session['missing_parameters_msg'] %}
 <div class="alert alert-danger" role="alert">
@@ -66,6 +50,9 @@
         {{ session['FFM']['instruction']|safe }}
     </div>
 
+    <div id="progress" class="progress" style="height: 0rem">
+        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" ></div>
+    </div>
     {% for trait in session['FFM']['questionnaire'] %}
         <div class="instrument_tab" style="display: none;">
             <div class="text-center p-2">
@@ -87,11 +74,40 @@
                             {% endif %}
                         </th>
                         <th class="ffm_slider my-auto">
-                            <input type="range" id="{{trait['INPUT_ID']}}" name="{{trait['INPUT_ID']}}"
-                                   class="ffm_range" min="18" max="162">
+                            <table class="table table-borderless p-0 slider_table ffm_slider">
+                                <tr class="ffm_slider">
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                    <th>|</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="9">
+                                        <input type="range" id="{{trait['INPUT_ID']}}" name="{{trait['INPUT_ID']}}"
+                                               class="ffm_range" min="18" max="162" step="18" list="{{trait['INPUT_ID']}}_values">
 
-                            <input type="hidden" id="{{trait['INPUT_ID']}}_swap" name="{{trait['INPUT_ID']}}_swap"
-                                   value="{{trait['SWAP']}}">
+                                        <input type="hidden" id="{{trait['INPUT_ID']}}_swap" name="{{trait['INPUT_ID']}}_swap"
+                                               value="{{trait['SWAP']}}">
+
+                                        <datalist id="{{trait['INPUT_ID']}}_values">
+                                          <option value="18" label="18"></option>
+                                          <option value="36" label="36"></option>
+                                          <option value="54" label="54"></option>
+                                          <option value="72" label="72"></option>
+                                          <option value="90" label="90"></option>
+                                          <option value="108" label="108"></option>
+                                          <option value="126" label="126"></option>
+                                          <option value="144" label="144"></option>
+                                          <option value="162" label="162"></option>
+                                        </datalist>
+                                    </th>
+                                </tr>
+                            </table>
                         </th>
                         <th class="ffm_story_right text-white my-auto">
                             {% if trait['SWAP'] %}
@@ -112,6 +128,7 @@
     <button id="s1_submit" name="s1_submit" value="s1_submit" onclick="nextTab(1)"
         class="btn btn-info btn-block" ></button>
 </div>
+</div>
 
 <script>
     var currentTab = 0; // Current tab is set to be the first tab (0)
@@ -123,10 +140,13 @@
 
       if (n == 0) {
         document.getElementById("s1_submit").innerHTML = "Start";
+        $('#progress').css('height', '0rem');
       } else if (n == (tabList.length - 1)) {
+        $('#progress').css('height', '1rem');
         document.getElementById("s1_submit").disabled = true;
         document.getElementById("s1_submit").innerHTML = "Submit";
       } else {
+        $('#progress').css('height', '1rem');
         document.getElementById("s1_submit").disabled = true;
         document.getElementById("s1_submit").innerHTML = "Next";
       }
@@ -136,11 +156,20 @@
       var tabList = document.getElementsByClassName("instrument_tab");
       tabList[currentTab].style.display = "none";
       currentTab = currentTab + n;
+
+      currentPercentage = 100 * (currentTab / numTab())
+      $('#progress-bar').attr('aria-valuenow', currentPercentage).css('width', currentPercentage + "%");
+
       if (currentTab >= tabList.length) {
         document.getElementById("session_one_form").submit();
       } else {
         showTab(currentTab);
       }
+    }
+
+    function numTab() {
+        var tabList = document.getElementsByClassName("instrument_tab");
+        return tabList.length - 1;
     }
 
     const $element = $('input[type="range"]');
